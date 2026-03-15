@@ -24,24 +24,37 @@ namespace TreasureTower.Editor
         [MenuItem("Tools/Treasure Tower/Build Initial Game")]
         public static void BuildInitialGame()
         {
+            BuildInitialGame(forceRebuildScenes: false);
+        }
+
+        [MenuItem("Tools/Treasure Tower/Force Rebuild All Scenes")]
+        public static void ForceRebuildAllScenes()
+        {
+            BuildInitialGame(forceRebuildScenes: true);
+        }
+
+        private static void BuildInitialGame(bool forceRebuildScenes)
+        {
             EnsureFolders();
-            CreateMainMenuScene();
-            CreateLevelOneScene();
-            CreateLevelOneMiniBossScene();
-            CreateLevelTwoScene();
-            CreateLevelThreeScene();
-            CreateLevelThreeMiniBossScene();
-            CreateLevelFourScene();
-            CreateLevelFiveScene();
+            CreateMainMenuScene(forceRebuildScenes);
+            CreateLevelOneScene(forceRebuildScenes);
+            CreateLevelOneMiniBossScene(forceRebuildScenes);
+            CreateLevelTwoScene(forceRebuildScenes);
+            CreateLevelThreeScene(forceRebuildScenes);
+            CreateLevelThreeMiniBossScene(forceRebuildScenes);
+            CreateLevelFourScene(forceRebuildScenes);
+            CreateLevelFiveScene(forceRebuildScenes);
             UpdateBuildSettings();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log("Treasure Tower initial scenes created.");
+            Debug.Log(forceRebuildScenes
+                ? "Treasure Tower scenes force rebuilt."
+                : "Treasure Tower scenes created if missing. Existing scene layouts were preserved.");
         }
 
         public static void BuildInitialGameBatch()
         {
-            BuildInitialGame();
+            BuildInitialGame(forceRebuildScenes: false);
             EditorApplication.Exit(0);
         }
 
@@ -51,8 +64,13 @@ namespace TreasureTower.Editor
             Directory.CreateDirectory("Assets/Scenes/Levels");
         }
 
-        private static void CreateMainMenuScene()
+        private static void CreateMainMenuScene(bool forceRebuild)
         {
+            if (!forceRebuild && File.Exists(SceneIds.MainMenu))
+            {
+                return;
+            }
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = "MainMenu";
 
@@ -158,8 +176,13 @@ namespace TreasureTower.Editor
             EditorSceneManager.SaveScene(scene, SceneIds.MainMenu);
         }
 
-        private static void CreateLevelOneScene()
+        private static void CreateLevelOneScene(bool forceRebuild)
         {
+            if (!forceRebuild && File.Exists(SceneIds.Level01))
+            {
+                return;
+            }
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = "TreasureTower_Level01";
 
@@ -173,8 +196,13 @@ namespace TreasureTower.Editor
             EditorSceneManager.SaveScene(scene, SceneIds.Level01);
         }
 
-        private static void CreateLevelTwoScene()
+        private static void CreateLevelTwoScene(bool forceRebuild)
         {
+            if (!forceRebuild && File.Exists(SceneIds.Level02))
+            {
+                return;
+            }
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = "TreasureTower_Level02";
 
@@ -188,8 +216,13 @@ namespace TreasureTower.Editor
             EditorSceneManager.SaveScene(scene, SceneIds.Level02);
         }
 
-        private static void CreateLevelOneMiniBossScene()
+        private static void CreateLevelOneMiniBossScene(bool forceRebuild)
         {
+            if (!forceRebuild && File.Exists(SceneIds.Level01MiniBoss))
+            {
+                return;
+            }
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = "TreasureTower_Level01_MiniBoss";
 
@@ -204,8 +237,13 @@ namespace TreasureTower.Editor
             EditorSceneManager.SaveScene(scene, SceneIds.Level01MiniBoss);
         }
 
-        private static void CreateLevelThreeScene()
+        private static void CreateLevelThreeScene(bool forceRebuild)
         {
+            if (!forceRebuild && File.Exists(SceneIds.Level03))
+            {
+                return;
+            }
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = "TreasureTower_Level03";
 
@@ -219,8 +257,13 @@ namespace TreasureTower.Editor
             EditorSceneManager.SaveScene(scene, SceneIds.Level03);
         }
 
-        private static void CreateLevelFourScene()
+        private static void CreateLevelFourScene(bool forceRebuild)
         {
+            if (!forceRebuild && File.Exists(SceneIds.Level04))
+            {
+                return;
+            }
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = "TreasureTower_Level04";
 
@@ -234,8 +277,13 @@ namespace TreasureTower.Editor
             EditorSceneManager.SaveScene(scene, SceneIds.Level04);
         }
 
-        private static void CreateLevelThreeMiniBossScene()
+        private static void CreateLevelThreeMiniBossScene(bool forceRebuild)
         {
+            if (!forceRebuild && File.Exists(SceneIds.Level03MiniBoss))
+            {
+                return;
+            }
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = "TreasureTower_Level03_MiniBoss";
 
@@ -250,8 +298,13 @@ namespace TreasureTower.Editor
             EditorSceneManager.SaveScene(scene, SceneIds.Level03MiniBoss);
         }
 
-        private static void CreateLevelFiveScene()
+        private static void CreateLevelFiveScene(bool forceRebuild)
         {
+            if (!forceRebuild && File.Exists(SceneIds.Level05))
+            {
+                return;
+            }
+
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             scene.name = "TreasureTower_Level05";
 
