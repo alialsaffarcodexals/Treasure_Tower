@@ -40,6 +40,16 @@ git clone https://github.com/alialsaffarcodexals/Treasure_Tower.git
 
 ## How To Play
 
+### Play Without Unity Editor
+
+If you only want to run the game, use the Windows build:
+
+- `Builds/Windows/TreasureTower.exe`
+
+Make sure the `.exe` stays together with the generated `TreasureTower_Data` folder and the other files inside `Builds/Windows`.
+
+### Play In Unity
+
 1. Open the `MainMenu` scene or press Play from the configured startup scene.
 2. Use the menu to start the game.
 3. Controls:
@@ -64,6 +74,7 @@ git clone https://github.com/alialsaffarcodexals/Treasure_Tower.git
 The repository includes the files needed to open and run the Unity project:
 
 - `Assets`
+- `Builds/Windows`
 - `Packages`
 - `ProjectSettings`
 

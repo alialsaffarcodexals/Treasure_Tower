@@ -4,6 +4,10 @@
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
+!Builds/
+Builds/*
+!Builds/Windows/
+!Builds/Windows/**
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
 [Mm]emoryCaptures/
@@ -39,4 +43,5 @@
 # OS files
 .DS_Store
 Thumbs.db
-
+debug.log
+.vsconfig
