@@ -96,9 +96,10 @@ namespace TreasureTower.Editor
             var controls = CreatePanel("ControlsPanel", homePanel.transform, new Vector2(0f, -270f), new Vector2(760f, 190f), new Color(1f, 1f, 1f, 0.8f));
             var controlsTitle = CreateText("ControlsTitle", controls.transform, "Controls", 26, new Vector2(0f, 62f), new Vector2(260f, 40f));
             controlsTitle.color = new Color(0.2f, 0.25f, 0.32f);
-            CreateControlTextRow(controls.transform, "MoveRow", "Move", "W A S D  or  Arrow Keys", new Vector2(0f, 18f));
+            CreateControlTextRow(controls.transform, "MoveRow", "Move", "A / D  or  Left / Right Arrow", new Vector2(0f, 38f));
             CreateControlTextRow(controls.transform, "JumpRow", "Jump", "Space", new Vector2(0f, -28f));
-            CreateControlTextRow(controls.transform, "PauseRow", "Pause", "Esc", new Vector2(0f, -74f));
+            CreateControlTextRow(controls.transform, "ShootRow", "Mini Boss Shoot", "F", new Vector2(0f, -8f));
+            CreateControlTextRow(controls.transform, "PauseRow", "Pause", "Esc", new Vector2(0f, -54f));
 
             var storyPanel = CreateOverlay(canvas.transform, "StoryPanel", "Story Of The Game", new Color(0.08f, 0.12f, 0.18f, 0.82f));
             var storyCard = storyPanel.transform.Find("Card");
@@ -107,7 +108,7 @@ namespace TreasureTower.Editor
             var storyText = CreateText(
                 "StoryText",
                 storyCard,
-                "A hidden treasure tower rises above the kingdom. Ali, the young climber, must cross five dangerous floors, collect the tower gems, and unlock the final summit door before the ancient treasure is lost forever.\n\nEvery level tests a different skill: timing, courage, careful jumps, and survival against ground and flying enemies. Collect more coins, finish faster, and die less to improve your record.\n\nGame Development subject: IT8101\nSupervised by Doctor Albaraa Janahi\nCourse Coordinator: Haetham Alhadad\nSection 2, Year Semester 2, 2025-2026",
+                "A hidden treasure tower rises above the kingdom. Ali, the young climber, must cross five dangerous floors, collect the tower gems, and unlock the final summit door before the ancient treasure is lost forever.\n\nSome floors hide risky mini-boss doors. If the player enters one, they must defeat a stronger enemy in a separate arena. Winning opens a special exit that skips ahead to a later level, but losing costs a life.\n\nEvery level tests a different skill: timing, courage, careful jumps, and survival against ground and flying enemies. Collect more coins, finish faster, and die less to improve your record.\n\nGame Development subject: IT8101\nSupervised by Doctor Albaraa Janahi\nCourse Coordinator: Haetham Alhadad\nSection 2, Year Semester 2, 2025-2026",
                 22,
                 new Vector2(0f, 30f),
                 new Vector2(760f, 280f));
@@ -1047,15 +1048,15 @@ namespace TreasureTower.Editor
             root.transform.SetParent(canvas.transform, false);
             var controller = root.AddComponent<MiniBossHudController>();
 
-            var panel = CreatePanel("BossPanel", root.transform, new Vector2(0f, -70f), new Vector2(700f, 44f), new Color(0.08f, 0.1f, 0.14f, 0.86f));
-            AnchorTo(panel.GetComponent<RectTransform>(), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f));
-            var nameText = CreateText("BossNameText", panel.transform, boss != null ? boss.BossName : "Mini Boss", 17, new Vector2(-238f, 0f), new Vector2(230f, 24f));
+            var panel = CreatePanel("BossPanel", root.transform, new Vector2(210f, -70f), new Vector2(440f, 44f), new Color(0.08f, 0.1f, 0.14f, 0.86f));
+            AnchorTo(panel.GetComponent<RectTransform>(), new Vector2(0f, 1f), new Vector2(0f, 1f));
+            var nameText = CreateText("BossNameText", panel.transform, boss != null ? boss.BossName : "Mini Boss", 17, new Vector2(-130f, 0f), new Vector2(150f, 24f));
             nameText.alignment = TextAnchor.MiddleLeft;
             nameText.color = Color.white;
-            var hpText = CreateText("BossHpText", panel.transform, "", 17, new Vector2(290f, 0f), new Vector2(62f, 24f));
+            var hpText = CreateText("BossHpText", panel.transform, "", 17, new Vector2(175f, 0f), new Vector2(56f, 24f));
             hpText.color = Color.white;
 
-            var fillBackground = CreatePanel("BossHealthBackground", panel.transform, new Vector2(48f, 0f), new Vector2(340f, 14f), new Color(0.22f, 0.24f, 0.28f, 1f));
+            var fillBackground = CreatePanel("BossHealthBackground", panel.transform, new Vector2(20f, 0f), new Vector2(190f, 14f), new Color(0.22f, 0.24f, 0.28f, 1f));
             var fillObject = new GameObject("BossHealthFill");
             fillObject.transform.SetParent(fillBackground.transform, false);
             var fillRect = fillObject.AddComponent<RectTransform>();
