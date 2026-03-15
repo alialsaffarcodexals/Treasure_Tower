@@ -46,6 +46,7 @@ git clone https://github.com/alialsaffarcodexals/Treasure_Tower.git
 
 - `A / D` or arrow keys: move
 - `Space`: jump
+- `F`: shoot in mini-boss scenes
 - `Esc`: pause
 
 ## Gameplay Rules
@@ -67,3 +68,8 @@ The repository includes the files needed to open and run the Unity project:
 - `ProjectSettings`
 
 Generated Unity folders like `Library`, `Logs`, and `Temp` are intentionally excluded from version control.
+
+## Notes
+
+- This is a first Unity project built as a personal effort, so it may include some mistakes or rough edges.
+- The project may also include some downloaded assets that are not used in the final gameplay and were kept for testing purposes during development.
