@@ -17,12 +17,10 @@ namespace TreasureTower.UI
         [SerializeField] private Slider uiSfxSlider;
 
         private bool buttonSoundsHooked;
-        private bool sliderPreviewHooked;
 
         private void Awake()
         {
             HookButtonSounds();
-            HookSliderPreviewSounds();
         }
 
         private void OnEnable()
@@ -30,7 +28,6 @@ namespace TreasureTower.UI
             ShowHome();
             RefreshLeaderboard();
             RefreshAudioSettings();
-            HookSliderPreviewSounds();
 
             if (AudioSettingsManager.Instance != null)
             {
@@ -178,38 +175,13 @@ namespace TreasureTower.UI
             var buttons = GetComponentsInChildren<Button>(true);
             foreach (var button in buttons)
             {
-                button.onClick.AddListener(UiClickSfx.Play);
+                button.onClick.AddListener(() =>
+                {
+                    UiClickSfx.Play();
+                });
             }
 
             buttonSoundsHooked = true;
-        }
-
-        private void HookSliderPreviewSounds()
-        {
-            if (sliderPreviewHooked)
-            {
-                return;
-            }
-
-            HookSliderPreview(musicSlider);
-            HookSliderPreview(sfxSlider);
-            HookSliderPreview(uiSfxSlider);
-            sliderPreviewHooked = true;
-        }
-
-        private void HookSliderPreview(Slider slider)
-        {
-            if (slider == null)
-            {
-                return;
-            }
-
-            slider.onValueChanged.AddListener(OnSliderPreviewChanged);
-        }
-
-        private void OnSliderPreviewChanged(float value)
-        {
-            UiClickSfx.PlayPreview();
         }
 
         private void OnUiSfxVolumeChanged(float value)
