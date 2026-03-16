@@ -60,10 +60,14 @@ namespace TreasureTower.Core
         public bool HasLivesRemaining => LivesRemaining > 0;
 
         private readonly List<AttemptRecord> leaderboard = new();
+
         private string currentLevelPath = SceneIds.Level01;
         private string retryScenePath = SceneIds.Level01;
         private string miniBossSkipTargetPath = string.Empty;
+        private string miniBossReturnLevelPath = string.Empty;
         private bool resetLivesOnSceneLoad = true;
+        private bool miniBossRunActive;
+        private int storedLevelLivesBeforeMiniBoss = 3;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void EnsureInstance()
@@ -133,6 +137,36 @@ namespace TreasureTower.Core
         {
             Time.timeScale = 1f;
 
+            if (miniBossRunActive && IsMiniBossScene(currentLevelPath))
+            {
+                if (HasLivesRemaining)
+                {
+                    resetLivesOnSceneLoad = false;
+                    retryScenePath = currentLevelPath;
+                    LoadScene(currentLevelPath);
+                    return;
+                }
+
+                var remainingLevelLives = Mathf.Max(0, storedLevelLivesBeforeMiniBoss - 1);
+                miniBossRunActive = false;
+                miniBossSkipTargetPath = string.Empty;
+
+                if (remainingLevelLives > 0 && !string.IsNullOrWhiteSpace(miniBossReturnLevelPath))
+                {
+                    storedLevelLivesBeforeMiniBoss = remainingLevelLives;
+                    LivesRemaining = remainingLevelLives;
+                    resetLivesOnSceneLoad = false;
+                    retryScenePath = miniBossReturnLevelPath;
+                    var returnLevelPath = miniBossReturnLevelPath;
+                    miniBossReturnLevelPath = string.Empty;
+                    LoadScene(returnLevelPath);
+                    return;
+                }
+
+                StartNewGame();
+                return;
+            }
+
             if (HasLivesRemaining)
             {
                 LoadScene(retryScenePath);
@@ -144,6 +178,9 @@ namespace TreasureTower.Core
 
         public void ReturnToMainMenu()
         {
+            miniBossRunActive = false;
+            miniBossReturnLevelPath = string.Empty;
+            miniBossSkipTargetPath = string.Empty;
             Time.timeScale = 1f;
             LoadScene(SceneIds.MainMenu);
         }
@@ -208,8 +245,12 @@ namespace TreasureTower.Core
                 return;
             }
 
-            retryScenePath = retryLevelPath;
+            miniBossRunActive = true;
+            storedLevelLivesBeforeMiniBoss = Mathf.Max(0, LivesRemaining);
+            miniBossReturnLevelPath = retryLevelPath;
             miniBossSkipTargetPath = skipLevelPath;
+            retryScenePath = miniBossScenePath;
+            LivesRemaining = 3;
             resetLivesOnSceneLoad = false;
             Time.timeScale = 1f;
             LoadScene(miniBossScenePath);
@@ -222,8 +263,13 @@ namespace TreasureTower.Core
                 return;
             }
 
-            var transitionLabel = miniBossSkipTargetPath == SceneIds.Level03 ? "Level 3" : "Level 5";
-            StartCoroutine(TransitionToLevel(miniBossSkipTargetPath, transitionLabel, true));
+            miniBossRunActive = false;
+            miniBossReturnLevelPath = string.Empty;
+            var targetScenePath = miniBossSkipTargetPath;
+            miniBossSkipTargetPath = string.Empty;
+            storedLevelLivesBeforeMiniBoss = 3;
+            var transitionLabel = targetScenePath == SceneIds.Level03 ? "Level 3" : "Level 5";
+            StartCoroutine(TransitionToLevel(targetScenePath, transitionLabel, true));
         }
 
         public void HandlePlayerDeath(PlayerController2D player)
@@ -236,9 +282,21 @@ namespace TreasureTower.Core
             player.SetInputEnabled(false);
             Deaths++;
             LivesRemaining = Mathf.Max(0, LivesRemaining - 1);
-            GameOverMessage = HasLivesRemaining
-                ? $"You lost a life.\nLives left: {LivesRemaining}/3\nRetry this level and keep climbing."
-                : "All 3 lives are gone.\nYour next attempt restarts from Level 1.";
+
+            if (miniBossRunActive && IsMiniBossScene(currentLevelPath))
+            {
+                GameOverMessage = HasLivesRemaining
+                    ? $"You lost a mini boss life.\nMini boss lives left: {LivesRemaining}/3\nRetry the mini boss stage."
+                    : storedLevelLivesBeforeMiniBoss > 1
+                        ? $"All mini boss lives are gone.\nYou return to the current level.\nLevel lives left: {storedLevelLivesBeforeMiniBoss - 1}/3"
+                        : "All mini boss lives are gone.\nNo level lives remain.\nYour next attempt restarts from Level 1.";
+            }
+            else
+            {
+                GameOverMessage = HasLivesRemaining
+                    ? $"You lost a life.\nLives left: {LivesRemaining}/3\nRetry this level and keep climbing."
+                    : "All 3 lives are gone.\nYour next attempt restarts from Level 1.";
+            }
 
             Time.timeScale = 0f;
             RunStatsChanged?.Invoke();
@@ -352,32 +410,43 @@ namespace TreasureTower.Core
             {
                 retryScenePath = SceneIds.Level01;
                 miniBossSkipTargetPath = string.Empty;
+                miniBossReturnLevelPath = string.Empty;
+                miniBossRunActive = false;
                 TransitionMessage = string.Empty;
                 SetState(GameFlowState.MainMenu);
                 Time.timeScale = 1f;
                 return;
             }
 
-            if (scene.path == SceneIds.Level01 || scene.path == SceneIds.Level02 || scene.path == SceneIds.Level03 || scene.path == SceneIds.Level04 || scene.path == SceneIds.Level05 || scene.path == SceneIds.Level01MiniBoss || scene.path == SceneIds.Level03MiniBoss)
+            if (!IsGameplayScene(scene.path))
             {
-                if (scene.path == SceneIds.Level01 || scene.path == SceneIds.Level02 || scene.path == SceneIds.Level03 || scene.path == SceneIds.Level04 || scene.path == SceneIds.Level05)
-                {
-                    retryScenePath = scene.path;
-                }
-
-                if (resetLivesOnSceneLoad)
-                {
-                    LivesRemaining = 3;
-                    resetLivesOnSceneLoad = false;
-                }
-
-                TransitionMessage = string.Empty;
-                TransitionMessageChanged?.Invoke(TransitionMessage);
-                Time.timeScale = 1f;
-                SetState(GameFlowState.Playing);
-                ScoreChanged?.Invoke(Coins, Gems);
-                RunStatsChanged?.Invoke();
+                return;
             }
+
+            if (IsMainTowerLevel(scene.path))
+            {
+                retryScenePath = scene.path;
+
+                if (!miniBossRunActive)
+                {
+                    miniBossSkipTargetPath = string.Empty;
+                    miniBossReturnLevelPath = string.Empty;
+                    storedLevelLivesBeforeMiniBoss = 3;
+                }
+            }
+
+            if (resetLivesOnSceneLoad)
+            {
+                LivesRemaining = 3;
+                resetLivesOnSceneLoad = false;
+            }
+
+            TransitionMessage = string.Empty;
+            TransitionMessageChanged?.Invoke(TransitionMessage);
+            Time.timeScale = 1f;
+            SetState(GameFlowState.Playing);
+            ScoreChanged?.Invoke(Coins, Gems);
+            RunStatsChanged?.Invoke();
         }
 
         private void ResetRunProgress()
@@ -389,6 +458,9 @@ namespace TreasureTower.Core
             LivesRemaining = 3;
             retryScenePath = SceneIds.Level01;
             miniBossSkipTargetPath = string.Empty;
+            miniBossReturnLevelPath = string.Empty;
+            miniBossRunActive = false;
+            storedLevelLivesBeforeMiniBoss = 3;
             GameOverMessage = "You lost a life.";
             VictoryTitle = "Congratulations";
             VictoryMessage = "You finished the game.";
@@ -439,6 +511,32 @@ namespace TreasureTower.Core
             var data = new AttemptRecordCollection { records = leaderboard };
             PlayerPrefs.SetString(LeaderboardKey, JsonUtility.ToJson(data));
             PlayerPrefs.Save();
+        }
+
+        private static bool IsGameplayScene(string scenePath)
+        {
+            return scenePath == SceneIds.Level01 ||
+                   scenePath == SceneIds.Level02 ||
+                   scenePath == SceneIds.Level03 ||
+                   scenePath == SceneIds.Level04 ||
+                   scenePath == SceneIds.Level05 ||
+                   scenePath == SceneIds.Level01MiniBoss ||
+                   scenePath == SceneIds.Level03MiniBoss;
+        }
+
+        private static bool IsMainTowerLevel(string scenePath)
+        {
+            return scenePath == SceneIds.Level01 ||
+                   scenePath == SceneIds.Level02 ||
+                   scenePath == SceneIds.Level03 ||
+                   scenePath == SceneIds.Level04 ||
+                   scenePath == SceneIds.Level05;
+        }
+
+        private static bool IsMiniBossScene(string scenePath)
+        {
+            return scenePath == SceneIds.Level01MiniBoss ||
+                   scenePath == SceneIds.Level03MiniBoss;
         }
 
         private void SetState(GameFlowState newState)
