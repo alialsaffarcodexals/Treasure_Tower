@@ -35,6 +35,7 @@ namespace TreasureTower.Systems
 
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            EnsureAudioSettingsManager();
             audioSource = GetComponent<AudioSource>();
             audioSource.loop = true;
             audioSource.playOnAwake = false;
@@ -48,6 +49,14 @@ namespace TreasureTower.Systems
             {
                 AudioSettingsManager.Instance.MusicVolumeChanged += OnMusicVolumeChanged;
             }
+        }
+
+        private void Start()
+        {
+            EnsureAudioSettingsManager();
+            AudioSettingsManager.Instance.MusicVolumeChanged -= OnMusicVolumeChanged;
+            AudioSettingsManager.Instance.MusicVolumeChanged += OnMusicVolumeChanged;
+            ApplyVolume();
         }
 
         public void Play(AudioClip clip, float volume = 0.45f)
@@ -105,6 +114,17 @@ namespace TreasureTower.Systems
 
             var settingsVolume = AudioSettingsManager.Instance != null ? AudioSettingsManager.Instance.MusicVolume : 0.75f;
             audioSource.volume = currentVolume * settingsVolume;
+        }
+
+        private static void EnsureAudioSettingsManager()
+        {
+            if (AudioSettingsManager.Instance != null)
+            {
+                return;
+            }
+
+            var settingsObject = new GameObject(nameof(AudioSettingsManager));
+            settingsObject.AddComponent<AudioSettingsManager>();
         }
     }
 }

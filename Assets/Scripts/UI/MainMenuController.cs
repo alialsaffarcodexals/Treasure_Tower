@@ -1,3 +1,4 @@
+using System.Collections;
 using TreasureTower.Core;
 using TreasureTower.Systems;
 using UnityEngine;
@@ -19,8 +20,11 @@ namespace TreasureTower.UI
         [SerializeField] private Button easyDifficultyButton;
         [SerializeField] private Button hardDifficultyButton;
 
+        private bool runtimeButtonsHooked;
+
         private void Awake()
         {
+            HookRuntimeButtons();
             ShowHomeImmediate();
         }
 
@@ -43,6 +47,8 @@ namespace TreasureTower.UI
             ShowHomeImmediate();
             RefreshAudioSettings();
             RefreshDifficultySettings();
+            TryPlayMenuMusic();
+            StartCoroutine(EnsureHomeViewNextFrame());
         }
 
         private void OnDisable()
@@ -205,6 +211,70 @@ namespace TreasureTower.UI
             {
                 settingsPanel.SetActive(false);
             }
+        }
+
+        private IEnumerator EnsureHomeViewNextFrame()
+        {
+            yield return null;
+            ShowHomeImmediate();
+            RefreshAudioSettings();
+            RefreshDifficultySettings();
+            TryPlayMenuMusic();
+        }
+
+        private void HookRuntimeButtons()
+        {
+            if (runtimeButtonsHooked)
+            {
+                return;
+            }
+
+            HookButton("SettingsBackButton", ShowHomeImmediate);
+            HookButton("StoryBackButton", ShowHomeImmediate);
+            HookButton("LeaderboardBackButton", ShowHomeImmediate);
+            runtimeButtonsHooked = true;
+        }
+
+        private void HookButton(string objectName, UnityEngine.Events.UnityAction action)
+        {
+            var buttonTransform = FindChildRecursive(transform.root, objectName);
+            if (buttonTransform == null || !buttonTransform.TryGetComponent<Button>(out var button))
+            {
+                return;
+            }
+
+            button.onClick.AddListener(action);
+        }
+
+        private void TryPlayMenuMusic()
+        {
+            var track = FindFirstObjectByType<MusicSceneTrack>(FindObjectsInactive.Include);
+            track?.PlayNow();
+        }
+
+        private static Transform FindChildRecursive(Transform parent, string objectName)
+        {
+            if (parent == null)
+            {
+                return null;
+            }
+
+            if (parent.name == objectName)
+            {
+                return parent;
+            }
+
+            for (var childIndex = 0; childIndex < parent.childCount; childIndex++)
+            {
+                var child = parent.GetChild(childIndex);
+                var result = FindChildRecursive(child, objectName);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
         }
 
         private void RefreshLeaderboard()
