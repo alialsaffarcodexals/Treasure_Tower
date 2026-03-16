@@ -15,6 +15,9 @@ namespace TreasureTower.UI
         [SerializeField] private Slider musicSlider;
         [SerializeField] private Slider sfxSlider;
         [SerializeField] private Slider uiSfxSlider;
+        [SerializeField] private Text difficultyValueText;
+        [SerializeField] private Button easyDifficultyButton;
+        [SerializeField] private Button hardDifficultyButton;
 
         private void Awake()
         {
@@ -26,6 +29,7 @@ namespace TreasureTower.UI
             ShowHomeImmediate();
             RefreshLeaderboard();
             RefreshAudioSettings();
+            RefreshDifficultySettings();
 
             if (AudioSettingsManager.Instance != null)
             {
@@ -38,6 +42,7 @@ namespace TreasureTower.UI
         {
             ShowHomeImmediate();
             RefreshAudioSettings();
+            RefreshDifficultySettings();
         }
 
         private void OnDisable()
@@ -154,6 +159,20 @@ namespace TreasureTower.UI
             AudioSettingsManager.Instance?.SetUiSfxVolume(value);
         }
 
+        public void SetEasyDifficulty()
+        {
+            UiClickSfx.Play();
+            DifficultySettings.SetMode(DifficultyMode.Easy);
+            RefreshDifficultySettings();
+        }
+
+        public void SetHardDifficulty()
+        {
+            UiClickSfx.Play();
+            DifficultySettings.SetMode(DifficultyMode.Hard);
+            RefreshDifficultySettings();
+        }
+
         public void QuitGame()
         {
             UiClickSfx.Play();
@@ -218,6 +237,26 @@ namespace TreasureTower.UI
             if (uiSfxSlider != null)
             {
                 uiSfxSlider.SetValueWithoutNotify(AudioSettingsManager.Instance.UiSfxVolume);
+            }
+        }
+
+        private void RefreshDifficultySettings()
+        {
+            var mode = DifficultySettings.CurrentMode;
+
+            if (difficultyValueText != null)
+            {
+                difficultyValueText.text = $"Difficulty: {mode} ({DifficultySettings.LivesPerStage} Lives)";
+            }
+
+            if (easyDifficultyButton != null)
+            {
+                easyDifficultyButton.interactable = mode != DifficultyMode.Easy;
+            }
+
+            if (hardDifficultyButton != null)
+            {
+                hardDifficultyButton.interactable = mode != DifficultyMode.Hard;
             }
         }
     }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TreasureTower.Player;
+using TreasureTower.Systems;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -48,7 +49,7 @@ namespace TreasureTower.Core
         public GameFlowState State { get; private set; } = GameFlowState.MainMenu;
         public int Coins { get; private set; }
         public int Gems { get; private set; }
-        public int LivesRemaining { get; private set; } = 3;
+        public int LivesRemaining { get; private set; } = DifficultySettings.LivesPerStage;
         public int Deaths { get; private set; }
         public int AttemptNumber { get; private set; }
         public float ElapsedTime { get; private set; }
@@ -58,6 +59,7 @@ namespace TreasureTower.Core
         public string VictoryMessage { get; private set; } = "You found the exit door.";
         public string VictoryStats { get; private set; } = string.Empty;
         public bool HasLivesRemaining => LivesRemaining > 0;
+        public int MaxLivesPerStage => DifficultySettings.LivesPerStage;
 
         private readonly List<AttemptRecord> leaderboard = new();
 
@@ -67,7 +69,7 @@ namespace TreasureTower.Core
         private string miniBossReturnLevelPath = string.Empty;
         private bool resetLivesOnSceneLoad = true;
         private bool miniBossRunActive;
-        private int storedLevelLivesBeforeMiniBoss = 3;
+        private int storedLevelLivesBeforeMiniBoss = DifficultySettings.LivesPerStage;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void EnsureInstance()
@@ -250,7 +252,7 @@ namespace TreasureTower.Core
             miniBossReturnLevelPath = retryLevelPath;
             miniBossSkipTargetPath = skipLevelPath;
             retryScenePath = miniBossScenePath;
-            LivesRemaining = 3;
+            LivesRemaining = MaxLivesPerStage;
             resetLivesOnSceneLoad = false;
             Time.timeScale = 1f;
             LoadScene(miniBossScenePath);
@@ -286,16 +288,16 @@ namespace TreasureTower.Core
             if (miniBossRunActive && IsMiniBossScene(currentLevelPath))
             {
                 GameOverMessage = HasLivesRemaining
-                    ? $"You lost a mini boss life.\nMini boss lives left: {LivesRemaining}/3\nRetry the mini boss stage."
+                    ? $"You lost a mini boss life.\nMini boss lives left: {LivesRemaining}/{MaxLivesPerStage}\nRetry the mini boss stage."
                     : storedLevelLivesBeforeMiniBoss > 1
-                        ? $"All mini boss lives are gone.\nYou return to the current level.\nLevel lives left: {storedLevelLivesBeforeMiniBoss - 1}/3"
-                        : "All mini boss lives are gone.\nNo level lives remain.\nYour next attempt restarts from Level 1.";
+                        ? $"All mini boss lives are gone.\nYou return to the current level.\nLevel lives left: {storedLevelLivesBeforeMiniBoss - 1}/{MaxLivesPerStage}"
+                        : $"All mini boss lives are gone.\nNo level lives remain.\nAll {MaxLivesPerStage} lives are gone.\nYour next attempt restarts from Level 1.";
             }
             else
             {
                 GameOverMessage = HasLivesRemaining
-                    ? $"You lost a life.\nLives left: {LivesRemaining}/3\nRetry this level and keep climbing."
-                    : "All 3 lives are gone.\nYour next attempt restarts from Level 1.";
+                    ? $"You lost a life.\nLives left: {LivesRemaining}/{MaxLivesPerStage}\nRetry this level and keep climbing."
+                    : $"All {MaxLivesPerStage} lives are gone.\nYour next attempt restarts from Level 1.";
             }
 
             Time.timeScale = 0f;
@@ -375,7 +377,7 @@ namespace TreasureTower.Core
 
         public string GetControlSummary()
         {
-            return "Collect coins across all levels, save your 3 lives in each stage, and finish faster with fewer deaths.";
+            return $"Collect coins across all levels, save your {MaxLivesPerStage} lives in each stage, and finish faster with fewer deaths.";
         }
 
         public static string FormatTime(float timeSeconds)
@@ -431,13 +433,13 @@ namespace TreasureTower.Core
                 {
                     miniBossSkipTargetPath = string.Empty;
                     miniBossReturnLevelPath = string.Empty;
-                    storedLevelLivesBeforeMiniBoss = 3;
+                    storedLevelLivesBeforeMiniBoss = MaxLivesPerStage;
                 }
             }
 
             if (resetLivesOnSceneLoad)
             {
-                LivesRemaining = 3;
+                LivesRemaining = MaxLivesPerStage;
                 resetLivesOnSceneLoad = false;
             }
 
@@ -455,12 +457,12 @@ namespace TreasureTower.Core
             Gems = 0;
             Deaths = 0;
             ElapsedTime = 0f;
-            LivesRemaining = 3;
+            LivesRemaining = MaxLivesPerStage;
             retryScenePath = SceneIds.Level01;
             miniBossSkipTargetPath = string.Empty;
             miniBossReturnLevelPath = string.Empty;
             miniBossRunActive = false;
-            storedLevelLivesBeforeMiniBoss = 3;
+            storedLevelLivesBeforeMiniBoss = MaxLivesPerStage;
             GameOverMessage = "You lost a life.";
             VictoryTitle = "Congratulations";
             VictoryMessage = "You finished the game.";

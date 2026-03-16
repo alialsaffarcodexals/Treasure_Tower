@@ -174,7 +174,7 @@ namespace TreasureTower.UI
 
             if (livesText != null)
             {
-                livesText.text = $"Lives {GameManager.Instance.LivesRemaining}/3";
+                livesText.text = $"Lives {GameManager.Instance.LivesRemaining}/{GameManager.Instance.MaxLivesPerStage}";
             }
 
             if (deathsText != null)
