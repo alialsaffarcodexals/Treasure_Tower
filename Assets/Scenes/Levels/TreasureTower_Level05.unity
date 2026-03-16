@@ -6358,11 +6358,11 @@ Transform:
   - {fileID: 1401935481}
   - {fileID: 1127541515}
   - {fileID: 23390435}
-  - {fileID: 9223372036854775809}
-  - {fileID: 9223372036854775815}
-  - {fileID: 9223372036854775821}
-  - {fileID: 9223372036854775827}
-  - {fileID: 9223372036854775832}
+  - {fileID: 3000000002}
+  - {fileID: 3000000008}
+  - {fileID: 3000000014}
+  - {fileID: 3000000020}
+  - {fileID: 3000000025}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &522045481
@@ -26447,7 +26447,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1 &9223372036854775808
+--- !u!1 &3000000001
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -26455,11 +26455,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9223372036854775809}
-  - component: {fileID: 9223372036854775810}
-  - component: {fileID: 9223372036854775811}
-  - component: {fileID: 9223372036854775812}
-  - component: {fileID: 9223372036854775813}
+  - component: {fileID: 3000000002}
+  - component: {fileID: 3000000003}
+  - component: {fileID: 3000000004}
+  - component: {fileID: 3000000005}
+  - component: {fileID: 3000000006}
   m_Layer: 0
   m_Name: MouseEnemy_B
   m_TagString: Untagged
@@ -26467,13 +26467,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9223372036854775809
+--- !u!4 &3000000002
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775808}
+  m_GameObject: {fileID: 3000000001}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 7.4, y: -1.98, z: 0.0}
@@ -26482,14 +26482,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 491223858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &9223372036854775810
+--- !u!212 &3000000003
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775808}
+  m_GameObject: {fileID: 3000000001}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -26541,14 +26541,14 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!50 &9223372036854775811
+--- !u!50 &3000000004
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775808}
+  m_GameObject: {fileID: 3000000001}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -26568,13 +26568,13 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &9223372036854775812
+--- !u!61 &3000000005
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775808}
+  m_GameObject: {fileID: 3000000001}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -26614,13 +26614,13 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.7, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &9223372036854775813
+--- !u!114 &3000000006
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775808}
+  m_GameObject: {fileID: 3000000001}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fad75030931ceaf4eba352e7068a6d42, type: 3}
@@ -26629,12 +26629,12 @@ MonoBehaviour:
   speed: 2.4
   patrolDistance: 1.7
   stompVelocityThreshold: -0.1
-  spriteRenderer: {fileID: 9223372036854775810}
+  spriteRenderer: {fileID: 3000000003}
   defeatClip: {fileID: 8300000, guid: 82fedd3f47027e94b871f3cfc4e97a49, type: 3}
   playerHitClip: {fileID: 8300000, guid: 95efca869960f4540a5a50d866c46bab, type: 3}
   dropCoinSprite: {fileID: 21300000, guid: c828c69d39278784a8ae886c3731c461, type: 3}
   coinPickupClip: {fileID: 8300000, guid: 2b822f3e7299e274a9b92c06dc640ac3, type: 3}
---- !u!1 &9223372036854775814
+--- !u!1 &3000000007
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -26642,11 +26642,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9223372036854775815}
-  - component: {fileID: 9223372036854775816}
-  - component: {fileID: 9223372036854775817}
-  - component: {fileID: 9223372036854775818}
-  - component: {fileID: 9223372036854775819}
+  - component: {fileID: 3000000008}
+  - component: {fileID: 3000000009}
+  - component: {fileID: 3000000010}
+  - component: {fileID: 3000000011}
+  - component: {fileID: 3000000012}
   m_Layer: 0
   m_Name: SlimeEnemy_B
   m_TagString: Untagged
@@ -26654,13 +26654,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9223372036854775815
+--- !u!4 &3000000008
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775814}
+  m_GameObject: {fileID: 3000000007}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 13.0, y: -1.98, z: 0.0}
@@ -26669,14 +26669,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 491223858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &9223372036854775816
+--- !u!212 &3000000009
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775814}
+  m_GameObject: {fileID: 3000000007}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -26728,14 +26728,14 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!50 &9223372036854775817
+--- !u!50 &3000000010
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775814}
+  m_GameObject: {fileID: 3000000007}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -26755,13 +26755,13 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &9223372036854775818
+--- !u!61 &3000000011
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775814}
+  m_GameObject: {fileID: 3000000007}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -26801,13 +26801,13 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.7, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &9223372036854775819
+--- !u!114 &3000000012
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775814}
+  m_GameObject: {fileID: 3000000007}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fad75030931ceaf4eba352e7068a6d42, type: 3}
@@ -26816,12 +26816,12 @@ MonoBehaviour:
   speed: 2.3
   patrolDistance: 1.7
   stompVelocityThreshold: -0.1
-  spriteRenderer: {fileID: 9223372036854775816}
+  spriteRenderer: {fileID: 3000000009}
   defeatClip: {fileID: 8300000, guid: 82fedd3f47027e94b871f3cfc4e97a49, type: 3}
   playerHitClip: {fileID: 8300000, guid: 95efca869960f4540a5a50d866c46bab, type: 3}
   dropCoinSprite: {fileID: 21300000, guid: c828c69d39278784a8ae886c3731c461, type: 3}
   coinPickupClip: {fileID: 8300000, guid: 2b822f3e7299e274a9b92c06dc640ac3, type: 3}
---- !u!1 &9223372036854775820
+--- !u!1 &3000000013
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -26829,11 +26829,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9223372036854775821}
-  - component: {fileID: 9223372036854775822}
-  - component: {fileID: 9223372036854775823}
-  - component: {fileID: 9223372036854775824}
-  - component: {fileID: 9223372036854775825}
+  - component: {fileID: 3000000014}
+  - component: {fileID: 3000000015}
+  - component: {fileID: 3000000016}
+  - component: {fileID: 3000000017}
+  - component: {fileID: 3000000018}
   m_Layer: 0
   m_Name: FlyEnemy_C
   m_TagString: Untagged
@@ -26841,13 +26841,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9223372036854775821
+--- !u!4 &3000000014
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775820}
+  m_GameObject: {fileID: 3000000013}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 52.0, y: 8.7, z: 0.0}
@@ -26856,14 +26856,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 491223858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &9223372036854775822
+--- !u!212 &3000000015
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775820}
+  m_GameObject: {fileID: 3000000013}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -26915,14 +26915,14 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!50 &9223372036854775823
+--- !u!50 &3000000016
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775820}
+  m_GameObject: {fileID: 3000000013}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -26942,13 +26942,13 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &9223372036854775824
+--- !u!61 &3000000017
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775820}
+  m_GameObject: {fileID: 3000000013}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -26988,13 +26988,13 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.7, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &9223372036854775825
+--- !u!114 &3000000018
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775820}
+  m_GameObject: {fileID: 3000000013}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fad75030931ceaf4eba352e7068a6d42, type: 3}
@@ -27003,12 +27003,12 @@ MonoBehaviour:
   speed: 3.35
   patrolDistance: 1.5
   stompVelocityThreshold: -0.1
-  spriteRenderer: {fileID: 9223372036854775822}
+  spriteRenderer: {fileID: 3000000015}
   defeatClip: {fileID: 8300000, guid: 82fedd3f47027e94b871f3cfc4e97a49, type: 3}
   playerHitClip: {fileID: 8300000, guid: 95efca869960f4540a5a50d866c46bab, type: 3}
   dropCoinSprite: {fileID: 21300000, guid: c828c69d39278784a8ae886c3731c461, type: 3}
   coinPickupClip: {fileID: 8300000, guid: 2b822f3e7299e274a9b92c06dc640ac3, type: 3}
---- !u!1 &9223372036854775826
+--- !u!1 &3000000019
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -27016,10 +27016,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9223372036854775827}
-  - component: {fileID: 9223372036854775828}
-  - component: {fileID: 9223372036854775829}
-  - component: {fileID: 9223372036854775830}
+  - component: {fileID: 3000000020}
+  - component: {fileID: 3000000021}
+  - component: {fileID: 3000000022}
+  - component: {fileID: 3000000023}
   m_Layer: 0
   m_Name: Spikes_22.0_-2.4
   m_TagString: Untagged
@@ -27027,13 +27027,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9223372036854775827
+--- !u!4 &3000000020
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775826}
+  m_GameObject: {fileID: 3000000019}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 22.0, y: -2.44, z: 0.0}
@@ -27042,14 +27042,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 491223858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &9223372036854775828
+--- !u!212 &3000000021
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775826}
+  m_GameObject: {fileID: 3000000019}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -27101,13 +27101,13 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!61 &9223372036854775829
+--- !u!61 &3000000022
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775826}
+  m_GameObject: {fileID: 3000000019}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -27147,20 +27147,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.55, y: 0.24}
   m_EdgeRadius: 0
---- !u!114 &9223372036854775830
+--- !u!114 &3000000023
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775826}
+  m_GameObject: {fileID: 3000000019}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3c614254289bf844ac5abe6bf80176f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TreasureTower.Environment.Hazard
   deathClip: {fileID: 8300000, guid: f6d23d433ca2f8443a5d1575ba48cbc3, type: 3}
---- !u!1 &9223372036854775831
+--- !u!1 &3000000024
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -27168,10 +27168,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9223372036854775832}
-  - component: {fileID: 9223372036854775833}
-  - component: {fileID: 9223372036854775834}
-  - component: {fileID: 9223372036854775835}
+  - component: {fileID: 3000000025}
+  - component: {fileID: 3000000026}
+  - component: {fileID: 3000000027}
+  - component: {fileID: 3000000028}
   m_Layer: 0
   m_Name: Spikes_41.0_-2.4
   m_TagString: Untagged
@@ -27179,13 +27179,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9223372036854775832
+--- !u!4 &3000000025
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775831}
+  m_GameObject: {fileID: 3000000024}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 41.0, y: -2.44, z: 0.0}
@@ -27194,14 +27194,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 491223858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &9223372036854775833
+--- !u!212 &3000000026
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775831}
+  m_GameObject: {fileID: 3000000024}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -27253,13 +27253,13 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!61 &9223372036854775834
+--- !u!61 &3000000027
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775831}
+  m_GameObject: {fileID: 3000000024}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -27299,20 +27299,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.55, y: 0.24}
   m_EdgeRadius: 0
---- !u!114 &9223372036854775835
+--- !u!114 &3000000028
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9223372036854775831}
+  m_GameObject: {fileID: 3000000024}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3c614254289bf844ac5abe6bf80176f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TreasureTower.Environment.Hazard
   deathClip: {fileID: 8300000, guid: f6d23d433ca2f8443a5d1575ba48cbc3, type: 3}
---- !u!1660057539 &9223372036854775807
+--- !u!1660057539 &3000000000
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
