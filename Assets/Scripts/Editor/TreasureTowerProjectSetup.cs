@@ -1095,7 +1095,7 @@ namespace TreasureTower.Editor
             SetObjectReference(gunController, "projectileSprite", LoadSprite("Assets/Art/Kenney/NewPlatformerPack/GeneratedTextures/Tiles/fireball.png"));
             SetObjectReference(gunController, "shootClip", AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/Kenney/ImpactSounds/impactMetal_light_000.ogg"));
             SetObjectReference(gunController, "projectileHitClip", AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/Kenney/ImpactSounds/impactGlass_light_002.ogg"));
-            SetFloat(gunController, "fireCooldown", 2f);
+            SetFloat(gunController, "fireCooldown", 1f);
             SetFloat(gunController, "projectileSpeed", 10f);
             SetLayerMask(gunController, "groundLayers", 1 << GroundLayer);
         }
