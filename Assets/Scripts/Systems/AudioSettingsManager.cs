@@ -7,14 +7,17 @@ namespace TreasureTower.Systems
     {
         private const string MusicVolumeKey = "TreasureTower.MusicVolume";
         private const string SfxVolumeKey = "TreasureTower.SfxVolume";
+        private const string UiSfxVolumeKey = "TreasureTower.UiSfxVolume";
 
         public static AudioSettingsManager Instance { get; private set; }
 
         public event Action<float> MusicVolumeChanged;
         public event Action<float> SfxVolumeChanged;
+        public event Action<float> UiSfxVolumeChanged;
 
         public float MusicVolume { get; private set; } = 0.75f;
         public float SfxVolume { get; private set; } = 0.85f;
+        public float UiSfxVolume { get; private set; } = 0.9f;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void EnsureInstance()
@@ -40,6 +43,7 @@ namespace TreasureTower.Systems
             DontDestroyOnLoad(gameObject);
             MusicVolume = PlayerPrefs.GetFloat(MusicVolumeKey, 0.75f);
             SfxVolume = PlayerPrefs.GetFloat(SfxVolumeKey, 0.85f);
+            UiSfxVolume = PlayerPrefs.GetFloat(UiSfxVolumeKey, 0.9f);
         }
 
         public void SetMusicVolume(float value)
@@ -56,6 +60,14 @@ namespace TreasureTower.Systems
             PlayerPrefs.SetFloat(SfxVolumeKey, SfxVolume);
             PlayerPrefs.Save();
             SfxVolumeChanged?.Invoke(SfxVolume);
+        }
+
+        public void SetUiSfxVolume(float value)
+        {
+            UiSfxVolume = Mathf.Clamp01(value);
+            PlayerPrefs.SetFloat(UiSfxVolumeKey, UiSfxVolume);
+            PlayerPrefs.Save();
+            UiSfxVolumeChanged?.Invoke(UiSfxVolume);
         }
     }
 }

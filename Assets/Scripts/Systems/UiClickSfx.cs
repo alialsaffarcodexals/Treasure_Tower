@@ -21,7 +21,7 @@ namespace TreasureTower.Systems
             }
 
             EnsureAudioSource();
-            var settingsVolume = AudioSettingsManager.Instance != null ? AudioSettingsManager.Instance.SfxVolume : 1f;
+            var settingsVolume = AudioSettingsManager.Instance != null ? AudioSettingsManager.Instance.UiSfxVolume : 1f;
             var scaledVolume = 0.9f * settingsVolume;
             if (scaledVolume <= 0.001f)
             {
@@ -44,6 +44,7 @@ namespace TreasureTower.Systems
             audioSource.playOnAwake = false;
             audioSource.loop = false;
             audioSource.spatialBlend = 0f;
+            audioSource.volume = 1f;
         }
     }
 }

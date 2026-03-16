@@ -6,11 +6,13 @@ using UnityEngine;
 namespace TreasureTower.Enemies
 {
     [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(Collider2D))]
     public sealed class SimplePatrolEnemy : MonoBehaviour
     {
         [SerializeField] private float speed = 2f;
         [SerializeField] private float patrolDistance = 2.5f;
         [SerializeField] private float stompVelocityThreshold = -0.1f;
+        [SerializeField] private float stompClearance = 0.05f;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private AudioClip defeatClip;
         [SerializeField] private AudioClip playerHitClip;
@@ -18,6 +20,7 @@ namespace TreasureTower.Enemies
         [SerializeField] private AudioClip coinPickupClip;
 
         private Rigidbody2D body;
+        private Collider2D enemyCollider;
         private Vector3 startPosition;
         private bool defeated;
         private float normalizedTravel;
@@ -26,6 +29,7 @@ namespace TreasureTower.Enemies
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
+            enemyCollider = GetComponent<Collider2D>();
             startPosition = transform.position;
             spriteRenderer ??= GetComponentInChildren<SpriteRenderer>();
             body.gravityScale = 0f;
@@ -62,29 +66,73 @@ namespace TreasureTower.Enemies
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            HandlePlayerCollision(collision);
+        }
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            HandlePlayerCollision(collision);
+        }
+
+        private void HandlePlayerCollision(Collision2D collision)
+        {
             if (defeated || !collision.collider.TryGetComponent<PlayerController2D>(out var player))
             {
                 return;
             }
 
+            if (CanBeStompedBy(player, collision))
+            {
+                Defeat(player);
+                return;
+            }
+
+            AudioOneShot.Play(playerHitClip, player.transform.position, 0.85f);
+            GameManager.Instance?.HandlePlayerDeath(player);
+        }
+
+        private bool CanBeStompedBy(PlayerController2D player, Collision2D collision)
+        {
+            if (player.Velocity.y > stompVelocityThreshold)
+            {
+                return false;
+            }
+
+            var playerCollider = player.GetComponent<Collider2D>();
+            if (playerCollider == null || enemyCollider == null)
+            {
+                return false;
+            }
+
+            var playerBottom = playerCollider.bounds.min.y;
+            var enemyTop = enemyCollider.bounds.max.y;
+            var playerAboveEnemy = playerBottom >= enemyTop - stompClearance;
+            if (playerAboveEnemy)
+            {
+                return true;
+            }
+
             foreach (var contact in collision.contacts)
             {
-                if (contact.normal.y <= -0.5f && player.Velocity.y <= stompVelocityThreshold)
+                if (contact.normal.y <= -0.25f)
                 {
-                    Defeat(player);
-                    return;
+                    return true;
+                }
+
+                if (contact.point.y >= enemyTop - stompClearance)
+                {
+                    return true;
                 }
             }
 
-            Systems.AudioOneShot.Play(playerHitClip, player.transform.position, 0.85f);
-            GameManager.Instance?.HandlePlayerDeath(player);
+            return player.transform.position.y > transform.position.y + stompClearance;
         }
 
         private void Defeat(PlayerController2D player)
         {
             defeated = true;
             player.Bounce();
-            Systems.AudioOneShot.Play(defeatClip, transform.position, 0.85f);
+            AudioOneShot.Play(defeatClip, transform.position, 0.85f);
             SpawnCoinDrop();
             Destroy(gameObject);
         }
@@ -97,7 +145,7 @@ namespace TreasureTower.Enemies
             }
 
             defeated = true;
-            Systems.AudioOneShot.Play(defeatClip, transform.position, 0.85f);
+            AudioOneShot.Play(defeatClip, transform.position, 0.85f);
             SpawnCoinDrop();
             Destroy(gameObject);
         }

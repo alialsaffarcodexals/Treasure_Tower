@@ -17,6 +17,7 @@ namespace TreasureTower.UI
         [SerializeField] private GameObject pausePanel;
         [SerializeField] private Slider pauseMusicSlider;
         [SerializeField] private Slider pauseSfxSlider;
+        [SerializeField] private Slider pauseUiSfxSlider;
         [SerializeField] private GameObject gameOverPanel;
         [SerializeField] private Text gameOverText;
         [SerializeField] private Button retryButton;
@@ -30,6 +31,7 @@ namespace TreasureTower.UI
 
         private void Awake()
         {
+            EnsurePauseUiSfxControls();
             HookButtonSounds();
         }
 
@@ -40,6 +42,7 @@ namespace TreasureTower.UI
                 return;
             }
 
+            EnsurePauseUiSfxControls();
             GameManager.Instance.ScoreChanged += OnScoreChanged;
             GameManager.Instance.StateChanged += OnStateChanged;
             GameManager.Instance.TransitionMessageChanged += OnTransitionMessageChanged;
@@ -48,6 +51,7 @@ namespace TreasureTower.UI
             {
                 AudioSettingsManager.Instance.MusicVolumeChanged += OnMusicVolumeChanged;
                 AudioSettingsManager.Instance.SfxVolumeChanged += OnSfxVolumeChanged;
+                AudioSettingsManager.Instance.UiSfxVolumeChanged += OnUiSfxVolumeChanged;
             }
             OnScoreChanged(GameManager.Instance.Coins, GameManager.Instance.Gems);
             OnTransitionMessageChanged(GameManager.Instance.TransitionMessage);
@@ -71,6 +75,7 @@ namespace TreasureTower.UI
             {
                 AudioSettingsManager.Instance.MusicVolumeChanged -= OnMusicVolumeChanged;
                 AudioSettingsManager.Instance.SfxVolumeChanged -= OnSfxVolumeChanged;
+                AudioSettingsManager.Instance.UiSfxVolumeChanged -= OnUiSfxVolumeChanged;
             }
         }
 
@@ -107,6 +112,11 @@ namespace TreasureTower.UI
         public void SetSfxVolume(float value)
         {
             AudioSettingsManager.Instance?.SetSfxVolume(value);
+        }
+
+        public void SetUiSfxVolume(float value)
+        {
+            AudioSettingsManager.Instance?.SetUiSfxVolume(value);
         }
 
         private void OnScoreChanged(int coins, int gems)
@@ -219,12 +229,101 @@ namespace TreasureTower.UI
             buttonSoundsHooked = true;
         }
 
+        private void EnsurePauseUiSfxControls()
+        {
+            if (pauseUiSfxSlider != null || pauseSfxSlider == null)
+            {
+                return;
+            }
+
+            var sliderObject = Instantiate(pauseSfxSlider.gameObject, pauseSfxSlider.transform.parent);
+            sliderObject.name = "PauseUiSfxSlider";
+            var sliderRect = sliderObject.GetComponent<RectTransform>();
+            var sourceRect = pauseSfxSlider.GetComponent<RectTransform>();
+            if (sliderRect != null && sourceRect != null)
+            {
+                sliderRect.anchorMin = sourceRect.anchorMin;
+                sliderRect.anchorMax = sourceRect.anchorMax;
+                sliderRect.pivot = sourceRect.pivot;
+                sliderRect.sizeDelta = sourceRect.sizeDelta;
+                sliderRect.anchoredPosition = sourceRect.anchoredPosition + new Vector2(0f, -78f);
+                sliderRect.localScale = sourceRect.localScale;
+            }
+
+            pauseUiSfxSlider = sliderObject.GetComponent<Slider>();
+            pauseUiSfxSlider.onValueChanged.RemoveAllListeners();
+            pauseUiSfxSlider.onValueChanged.AddListener(SetUiSfxVolume);
+
+            var templateLabel = FindClosestLabel(pauseSfxSlider);
+            if (templateLabel != null)
+            {
+                var labelObject = Instantiate(templateLabel.gameObject, templateLabel.transform.parent);
+                labelObject.name = "PauseUiSfxLabel";
+                var labelRect = labelObject.GetComponent<RectTransform>();
+                var templateRect = templateLabel.GetComponent<RectTransform>();
+                if (labelRect != null && templateRect != null)
+                {
+                    labelRect.anchorMin = templateRect.anchorMin;
+                    labelRect.anchorMax = templateRect.anchorMax;
+                    labelRect.pivot = templateRect.pivot;
+                    labelRect.sizeDelta = templateRect.sizeDelta;
+                    labelRect.anchoredPosition = templateRect.anchoredPosition + new Vector2(0f, -78f);
+                    labelRect.localScale = templateRect.localScale;
+                }
+
+                var labelText = labelObject.GetComponent<Text>();
+                if (labelText != null)
+                {
+                    labelText.text = "Menu / UI";
+                }
+            }
+        }
+
+        private Text FindClosestLabel(Slider slider)
+        {
+            var sliderRect = slider.GetComponent<RectTransform>();
+            if (sliderRect == null || slider.transform.parent == null)
+            {
+                return null;
+            }
+
+            Text closestLabel = null;
+            var bestScore = float.MaxValue;
+            foreach (var label in slider.transform.parent.GetComponentsInChildren<Text>(true))
+            {
+                var labelRect = label.GetComponent<RectTransform>();
+                if (labelRect == null)
+                {
+                    continue;
+                }
+
+                if (labelRect.anchoredPosition.x >= sliderRect.anchoredPosition.x)
+                {
+                    continue;
+                }
+
+                var score = Mathf.Abs(labelRect.anchoredPosition.y - sliderRect.anchoredPosition.y);
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    closestLabel = label;
+                }
+            }
+
+            return closestLabel;
+        }
+
         private void OnMusicVolumeChanged(float value)
         {
             RefreshAudioSettings();
         }
 
         private void OnSfxVolumeChanged(float value)
+        {
+            RefreshAudioSettings();
+        }
+
+        private void OnUiSfxVolumeChanged(float value)
         {
             RefreshAudioSettings();
         }
@@ -244,6 +343,11 @@ namespace TreasureTower.UI
             if (pauseSfxSlider != null)
             {
                 pauseSfxSlider.SetValueWithoutNotify(AudioSettingsManager.Instance.SfxVolume);
+            }
+
+            if (pauseUiSfxSlider != null)
+            {
+                pauseUiSfxSlider.SetValueWithoutNotify(AudioSettingsManager.Instance.UiSfxVolume);
             }
         }
     }
