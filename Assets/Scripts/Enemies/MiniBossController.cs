@@ -10,6 +10,9 @@ namespace TreasureTower.Enemies
     {
         [SerializeField] private string bossName = "Mini Boss";
         [SerializeField] private int maxHealth = 6;
+        [SerializeField] private float moveRangeX = 1.15f;
+        [SerializeField] private float moveRangeY = 0.18f;
+        [SerializeField] private float moveSpeed = 1.35f;
         [SerializeField] private float shootCooldown = 2.4f;
         [SerializeField] private float projectileSpeed = 8f;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -42,11 +45,15 @@ namespace TreasureTower.Enemies
         private float nextShotTime;
         private float nextSmallWaveTime;
         private float nextLargeWaveTime;
+        private Vector3 startPosition;
+        private float movePhaseOffset;
 
         private void Awake()
         {
             CurrentHealth = Mathf.Max(1, maxHealth);
             spriteRenderer ??= GetComponentInChildren<SpriteRenderer>();
+            startPosition = transform.position;
+            movePhaseOffset = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
             nextSmallWaveTime = smallWaveCount > 0 && smallWaveInterval > 0f ? Time.time : float.PositiveInfinity;
             nextLargeWaveTime = largeWaveCount > 0 && largeWaveInterval > 0f ? Time.time + largeWaveInterval : float.PositiveInfinity;
         }
@@ -68,6 +75,8 @@ namespace TreasureTower.Enemies
                 return;
             }
 
+            UpdateMovement();
+
             if (Time.time >= nextShotTime)
             {
                 ShootAtPlayer();
@@ -85,6 +94,19 @@ namespace TreasureTower.Enemies
                 SpawnMinionWave(largeWaveCount);
                 nextLargeWaveTime = Time.time + largeWaveInterval;
             }
+        }
+
+        private void UpdateMovement()
+        {
+            if (moveSpeed <= 0.01f || (moveRangeX <= 0.01f && moveRangeY <= 0.01f))
+            {
+                return;
+            }
+
+            var time = (Time.time * moveSpeed) + movePhaseOffset;
+            var horizontalOffset = Mathf.Sin(time) * moveRangeX;
+            var verticalOffset = Mathf.Cos(time * 1.35f) * moveRangeY;
+            transform.position = startPosition + new Vector3(horizontalOffset, verticalOffset, 0f);
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
