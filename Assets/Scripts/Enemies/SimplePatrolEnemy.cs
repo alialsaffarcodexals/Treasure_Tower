@@ -1,5 +1,6 @@
 using TreasureTower.Core;
 using TreasureTower.Player;
+using TreasureTower.Systems;
 using UnityEngine;
 
 namespace TreasureTower.Enemies
@@ -13,6 +14,8 @@ namespace TreasureTower.Enemies
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private AudioClip defeatClip;
         [SerializeField] private AudioClip playerHitClip;
+        [SerializeField] private Sprite dropCoinSprite;
+        [SerializeField] private AudioClip coinPickupClip;
 
         private Rigidbody2D body;
         private Vector3 startPosition;
@@ -82,6 +85,7 @@ namespace TreasureTower.Enemies
             defeated = true;
             player.Bounce();
             Systems.AudioOneShot.Play(defeatClip, transform.position, 0.85f);
+            SpawnCoinDrop();
             Destroy(gameObject);
         }
 
@@ -94,7 +98,30 @@ namespace TreasureTower.Enemies
 
             defeated = true;
             Systems.AudioOneShot.Play(defeatClip, transform.position, 0.85f);
+            SpawnCoinDrop();
             Destroy(gameObject);
+        }
+
+        private void SpawnCoinDrop()
+        {
+            if (dropCoinSprite == null)
+            {
+                return;
+            }
+
+            var coinObject = new GameObject($"{name}_CoinDrop");
+            coinObject.transform.position = transform.position + new Vector3(0f, 0.2f, 0f);
+
+            var renderer = coinObject.AddComponent<SpriteRenderer>();
+            renderer.sprite = dropCoinSprite;
+            renderer.sortingOrder = 4;
+
+            var collider = coinObject.AddComponent<CircleCollider2D>();
+            collider.isTrigger = true;
+            collider.radius = 0.24f;
+
+            var collectible = coinObject.AddComponent<Collectible>();
+            collectible.Configure(Collectible.CollectibleKind.Coin, 1, coinPickupClip, 0.82f);
         }
     }
 }

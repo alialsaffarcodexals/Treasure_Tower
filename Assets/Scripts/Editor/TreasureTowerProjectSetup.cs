@@ -846,6 +846,8 @@ namespace TreasureTower.Editor
             SetObjectReference(enemy, "spriteRenderer", renderer);
             SetObjectReference(enemy, "defeatClip", AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/Kenney/ImpactSounds/impactPunch_medium_002.ogg"));
             SetObjectReference(enemy, "playerHitClip", AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/Kenney/ImpactSounds/impactPunch_heavy_001.ogg"));
+            SetObjectReference(enemy, "dropCoinSprite", LoadSprite("Assets/Art/Kenney/NewPlatformerPack/GeneratedTextures/Tiles/coin_gold.png"));
+            SetObjectReference(enemy, "coinPickupClip", AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/Kenney/NewPlatformerPack/sfx_coin.ogg"));
         }
 
         private static void CreateHazards(Transform parent)
@@ -1064,6 +1066,8 @@ namespace TreasureTower.Editor
             SetObjectReference(enemy, "spriteRenderer", renderer);
             SetObjectReference(enemy, "defeatClip", AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/Kenney/ImpactSounds/impactPunch_medium_002.ogg"));
             SetObjectReference(enemy, "playerHitClip", AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/Kenney/ImpactSounds/impactPunch_heavy_001.ogg"));
+            SetObjectReference(enemy, "dropCoinSprite", LoadSprite("Assets/Art/Kenney/NewPlatformerPack/GeneratedTextures/Tiles/coin_gold.png"));
+            SetObjectReference(enemy, "coinPickupClip", AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX/Kenney/NewPlatformerPack/sfx_coin.ogg"));
             template.SetActive(false);
             return template;
         }
