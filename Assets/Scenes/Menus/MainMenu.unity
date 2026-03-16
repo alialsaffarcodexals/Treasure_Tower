@@ -4247,7 +4247,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2020793238}
         m_TargetAssemblyTypeName: TreasureTower.UI.MainMenuController, Assembly-CSharp
-        m_MethodName: SetSfxVolume
+        m_MethodName: SetUiSfxVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

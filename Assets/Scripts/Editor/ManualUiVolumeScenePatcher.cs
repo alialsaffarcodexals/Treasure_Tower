@@ -1,6 +1,7 @@
 using System.IO;
 using TreasureTower.UI;
 using UnityEditor;
+using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,6 +43,7 @@ namespace TreasureTower.Editor
                 var normalizedPath = targetPath.Replace('\\', '/');
                 if (normalizedPath == PauseMenuSourceScenePath)
                 {
+                    FixGameplayUiSliderBinding(sourceScene);
                     EditorSceneManager.SaveScene(sourceScene);
                     continue;
                 }
@@ -64,15 +66,18 @@ namespace TreasureTower.Editor
 
                 var clonedPausePanel = Object.Instantiate(sourcePausePanel, targetCanvas.transform);
                 clonedPausePanel.name = "PausePanel";
-
                 clonedPausePanel.transform.SetSiblingIndex(siblingIndex);
 
                 var serializedHud = new SerializedObject(targetHud);
+                var pauseMusic = FindSliderInChildren(clonedPausePanel.transform, "PauseMusicSlider");
+                var pauseSfx = FindSliderInChildren(clonedPausePanel.transform, "PauseSfxSlider");
+                var pauseUi = FindSliderInChildren(clonedPausePanel.transform, "PauseUiSfxSlider");
                 serializedHud.FindProperty("pausePanel").objectReferenceValue = clonedPausePanel;
-                serializedHud.FindProperty("pauseMusicSlider").objectReferenceValue = FindSliderInChildren(clonedPausePanel.transform, "PauseMusicSlider");
-                serializedHud.FindProperty("pauseSfxSlider").objectReferenceValue = FindSliderInChildren(clonedPausePanel.transform, "PauseSfxSlider");
-                serializedHud.FindProperty("pauseUiSfxSlider").objectReferenceValue = FindSliderInChildren(clonedPausePanel.transform, "PauseUiSfxSlider");
+                serializedHud.FindProperty("pauseMusicSlider").objectReferenceValue = pauseMusic;
+                serializedHud.FindProperty("pauseSfxSlider").objectReferenceValue = pauseSfx;
+                serializedHud.FindProperty("pauseUiSfxSlider").objectReferenceValue = pauseUi;
                 serializedHud.ApplyModifiedPropertiesWithoutUndo();
+                FixSliderBinding(pauseUi, targetHud.SetUiSfxVolume);
 
                 EditorSceneManager.MarkSceneDirty(targetScene);
                 EditorSceneManager.SaveScene(targetScene);
@@ -118,13 +123,24 @@ namespace TreasureTower.Editor
                 EditorSceneManager.MarkSceneDirty(scene);
             }
 
+            if (uiSfxSlider != null)
+            {
+                FixSliderBinding(uiSfxSlider, controller.SetUiSfxVolume);
+            }
+
             EditorSceneManager.SaveScene(scene);
         }
 
         private static void PatchGameplayScene(string scenePath)
         {
             var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
-            var controller = Object.FindFirstObjectByType<GameplayHudController>(FindObjectsInactive.Include);
+            FixGameplayUiSliderBinding(scene);
+            EditorSceneManager.SaveScene(scene);
+        }
+
+        private static void FixGameplayUiSliderBinding(Scene scene)
+        {
+            var controller = FindFirstComponentInScene<GameplayHudController>(scene);
             if (controller == null)
             {
                 return;
@@ -145,7 +161,26 @@ namespace TreasureTower.Editor
                 EditorSceneManager.MarkSceneDirty(scene);
             }
 
-            EditorSceneManager.SaveScene(scene);
+            if (uiSfxSlider != null)
+            {
+                FixSliderBinding(uiSfxSlider, controller.SetUiSfxVolume);
+            }
+        }
+
+        private static void FixSliderBinding(Slider slider, UnityEngine.Events.UnityAction<float> callback)
+        {
+            if (slider == null)
+            {
+                return;
+            }
+
+            while (slider.onValueChanged.GetPersistentEventCount() > 0)
+            {
+                UnityEventTools.RemovePersistentListener(slider.onValueChanged, 0);
+            }
+
+            UnityEventTools.AddPersistentListener(slider.onValueChanged, callback);
+            EditorUtility.SetDirty(slider);
         }
 
         private static T FindComponentInScene<T>(Scene scene, string objectName) where T : Component

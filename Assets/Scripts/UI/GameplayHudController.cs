@@ -28,12 +28,12 @@ namespace TreasureTower.UI
         [SerializeField] private Text victoryLeaderboardText;
 
         private bool buttonSoundsHooked;
-        private bool uiSliderHooked;
+        private bool sliderPreviewHooked;
 
         private void Awake()
         {
             HookButtonSounds();
-            HookUiSlider();
+            HookSliderPreviewSounds();
         }
 
         private void OnEnable()
@@ -43,7 +43,7 @@ namespace TreasureTower.UI
                 return;
             }
 
-            HookUiSlider();
+            HookSliderPreviewSounds();
             GameManager.Instance.ScoreChanged += OnScoreChanged;
             GameManager.Instance.StateChanged += OnStateChanged;
             GameManager.Instance.TransitionMessageChanged += OnTransitionMessageChanged;
@@ -230,15 +230,32 @@ namespace TreasureTower.UI
             buttonSoundsHooked = true;
         }
 
-        private void HookUiSlider()
+        private void HookSliderPreviewSounds()
         {
-            if (uiSliderHooked || pauseUiSfxSlider == null)
+            if (sliderPreviewHooked)
             {
                 return;
             }
 
-            pauseUiSfxSlider.onValueChanged.AddListener(SetUiSfxVolume);
-            uiSliderHooked = true;
+            HookSliderPreview(pauseMusicSlider);
+            HookSliderPreview(pauseSfxSlider);
+            HookSliderPreview(pauseUiSfxSlider);
+            sliderPreviewHooked = true;
+        }
+
+        private void HookSliderPreview(Slider slider)
+        {
+            if (slider == null)
+            {
+                return;
+            }
+
+            slider.onValueChanged.AddListener(OnSliderPreviewChanged);
+        }
+
+        private void OnSliderPreviewChanged(float value)
+        {
+            UiClickSfx.PlayPreview();
         }
 
         private void OnMusicVolumeChanged(float value)

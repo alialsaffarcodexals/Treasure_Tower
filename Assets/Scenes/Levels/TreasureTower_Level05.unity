@@ -5649,7 +5649,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 147973124}
         m_TargetAssemblyTypeName: TreasureTower.UI.GameplayHudController, Assembly-CSharp
-        m_MethodName: SetSfxVolume
+        m_MethodName: SetUiSfxVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
