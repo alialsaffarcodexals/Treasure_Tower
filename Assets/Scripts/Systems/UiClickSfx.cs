@@ -6,6 +6,7 @@ namespace TreasureTower.Systems
     {
         private const string MenuClickResourcePath = "Audio/menu_click";
         private static AudioClip cachedClip;
+        private static AudioSource audioSource;
 
         public static void Play()
         {
@@ -14,7 +15,35 @@ namespace TreasureTower.Systems
                 cachedClip = Resources.Load<AudioClip>(MenuClickResourcePath);
             }
 
-            AudioOneShot.Play(cachedClip, Vector3.zero, 0.9f);
+            if (cachedClip == null)
+            {
+                return;
+            }
+
+            EnsureAudioSource();
+            var settingsVolume = AudioSettingsManager.Instance != null ? AudioSettingsManager.Instance.SfxVolume : 1f;
+            var scaledVolume = 0.9f * settingsVolume;
+            if (scaledVolume <= 0.001f)
+            {
+                return;
+            }
+
+            audioSource.PlayOneShot(cachedClip, scaledVolume);
+        }
+
+        private static void EnsureAudioSource()
+        {
+            if (audioSource != null)
+            {
+                return;
+            }
+
+            var audioObject = new GameObject("UiClickSfxPlayer");
+            Object.DontDestroyOnLoad(audioObject);
+            audioSource = audioObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.loop = false;
+            audioSource.spatialBlend = 0f;
         }
     }
 }
