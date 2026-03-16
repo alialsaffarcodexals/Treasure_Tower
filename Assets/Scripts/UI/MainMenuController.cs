@@ -15,6 +15,13 @@ namespace TreasureTower.UI
         [SerializeField] private Slider musicSlider;
         [SerializeField] private Slider sfxSlider;
 
+        private bool buttonSoundsHooked;
+
+        private void Awake()
+        {
+            HookButtonSounds();
+        }
+
         private void OnEnable()
         {
             ShowHome();
@@ -136,6 +143,22 @@ namespace TreasureTower.UI
         public void QuitGame()
         {
             Application.Quit();
+        }
+
+        private void HookButtonSounds()
+        {
+            if (buttonSoundsHooked)
+            {
+                return;
+            }
+
+            var buttons = GetComponentsInChildren<Button>(true);
+            foreach (var button in buttons)
+            {
+                button.onClick.AddListener(UiClickSfx.Play);
+            }
+
+            buttonSoundsHooked = true;
         }
 
         private void RefreshLeaderboard()
