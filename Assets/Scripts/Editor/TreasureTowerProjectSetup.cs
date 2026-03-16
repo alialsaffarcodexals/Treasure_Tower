@@ -363,37 +363,44 @@ namespace TreasureTower.Editor
         private static void CreateLevelTwoWorld(Transform cameraTransform)
         {
             var worldRoot = new GameObject("World");
-            var player = CreatePlayer(worldRoot.transform, new Vector3(-12.2f, -2.2f, 0f));
+            var player = CreatePlayer(worldRoot.transform, new Vector3(-15.4f, -2.2f, 0f));
 
             var terrainSprite = LoadSprite("Assets/Art/Kenney/NewPlatformerPack/GeneratedTextures/Tiles/terrain_purple_block_center.png");
-            CreatePlatformRow(worldRoot.transform, "Ground", terrainSprite, new Vector3(-13.2f, -3f, 0f), 36);
-            CreatePlatformRow(worldRoot.transform, "RiseA", terrainSprite, new Vector3(-10.2f, -1.75f, 0f), 3);
-            CreatePlatformRow(worldRoot.transform, "RiseB", terrainSprite, new Vector3(-6.1f, -0.45f, 0f), 4);
-            CreatePlatformRow(worldRoot.transform, "RiseC", terrainSprite, new Vector3(-1.2f, 0.85f, 0f), 4);
-            CreatePlatformRow(worldRoot.transform, "RiseD", terrainSprite, new Vector3(3.9f, -0.1f, 0f), 3);
-            CreatePlatformRow(worldRoot.transform, "RiseE", terrainSprite, new Vector3(7.6f, 1.15f, 0f), 3);
-            CreatePlatformRow(worldRoot.transform, "GoalLedge", terrainSprite, new Vector3(11.1f, 2.4f, 0f), 4);
+            CreatePlatformRow(worldRoot.transform, "Ground", terrainSprite, new Vector3(-16.4f, -3f, 0f), 48);
+            CreatePlatformRow(worldRoot.transform, "StepA", terrainSprite, new Vector3(-12.3f, -1.95f, 0f), 3);
+            CreatePlatformRow(worldRoot.transform, "StepB", terrainSprite, new Vector3(-7.7f, -0.95f, 0f), 3);
+            CreatePlatformRow(worldRoot.transform, "StepC", terrainSprite, new Vector3(-2.6f, -0.05f, 0f), 3);
+            CreatePlatformRow(worldRoot.transform, "BridgeA", terrainSprite, new Vector3(2.6f, 0.75f, 0f), 3);
+            CreatePlatformRow(worldRoot.transform, "BridgeB", terrainSprite, new Vector3(7.5f, 1.65f, 0f), 3);
+            CreatePlatformRow(worldRoot.transform, "BridgeC", terrainSprite, new Vector3(12.4f, 2.45f, 0f), 3);
+            CreatePlatformRow(worldRoot.transform, "GoalLedge", terrainSprite, new Vector3(17.3f, 3.25f, 0f), 4);
 
             var coinSprite = LoadSprite("Assets/Art/Kenney/NewPlatformerPack/GeneratedTextures/Tiles/coin_gold.png");
             var gemSprite = LoadSprite("Assets/Art/Kenney/NewPlatformerPack/GeneratedTextures/Tiles/gem_blue.png");
-            CreateCollectible(worldRoot.transform, "CoinA", coinSprite, new Vector3(-9.4f, -0.9f, 0f), Collectible.CollectibleKind.Coin);
-            CreateCollectible(worldRoot.transform, "CoinB", coinSprite, new Vector3(-5.1f, 0.35f, 0f), Collectible.CollectibleKind.Coin);
-            CreateCollectible(worldRoot.transform, "CoinC", coinSprite, new Vector3(-0.15f, 1.7f, 0f), Collectible.CollectibleKind.Coin);
-            CreateCollectible(worldRoot.transform, "CoinD", coinSprite, new Vector3(4.8f, 0.85f, 0f), Collectible.CollectibleKind.Coin);
-            CreateCollectible(worldRoot.transform, "CoinE", coinSprite, new Vector3(9.0f, 2.15f, 0f), Collectible.CollectibleKind.Coin);
-            CreateCollectible(worldRoot.transform, "GemA", gemSprite, new Vector3(-0.1f, 2.7f, 0f), Collectible.CollectibleKind.Gem);
+            CreateCollectible(worldRoot.transform, "CoinA", coinSprite, new Vector3(-13.0f, -1.05f, 0f), Collectible.CollectibleKind.Coin);
+            CreateCollectible(worldRoot.transform, "CoinB", coinSprite, new Vector3(-8.2f, -0.05f, 0f), Collectible.CollectibleKind.Coin);
+            CreateCollectible(worldRoot.transform, "CoinC", coinSprite, new Vector3(-3.2f, 0.9f, 0f), Collectible.CollectibleKind.Coin);
+            CreateCollectible(worldRoot.transform, "CoinD", coinSprite, new Vector3(2.0f, 0.0f, 0f), Collectible.CollectibleKind.Coin);
+            CreateCollectible(worldRoot.transform, "CoinE", coinSprite, new Vector3(5.9f, 1.6f, 0f), Collectible.CollectibleKind.Coin);
+            CreateCollectible(worldRoot.transform, "CoinF", coinSprite, new Vector3(10.8f, 2.35f, 0f), Collectible.CollectibleKind.Coin);
+            CreateCollectible(worldRoot.transform, "CoinG", coinSprite, new Vector3(15.8f, 3.15f, 0f), Collectible.CollectibleKind.Coin);
+            CreateCollectible(worldRoot.transform, "GemA", gemSprite, new Vector3(4.8f, 2.55f, 0f), Collectible.CollectibleKind.Gem);
 
-            CreateEnemy(worldRoot.transform, "BatEnemy", "Assets/Art/Kenney/PlatformerExtendedEnemies/Enemy sprites/bat_fly.png", new Vector3(-3.6f, 1.55f, 0f), 1.4f, 1.9f);
-            CreateEnemy(worldRoot.transform, "BeeEnemy", "Assets/Art/Kenney/PlatformerExtendedEnemies/Enemy sprites/bee_fly.png", new Vector3(5.8f, 0.7f, 0f), 1.6f, 2.3f);
-            CreateEnemy(worldRoot.transform, "FlyEnemy", "Assets/Art/Kenney/PlatformerExtendedEnemies/Enemy sprites/fly_fly.png", new Vector3(10.0f, 2.0f, 0f), 1.2f, 2.5f);
+            CreateEnemy(worldRoot.transform, "WormEnemy_A", "Assets/Art/Kenney/PlatformerExtendedEnemies/Enemy sprites/worm.png", new Vector3(-11.4f, -2.12f, 0f), 1.4f, 1.9f);
+            CreateEnemy(worldRoot.transform, "SnailEnemy_A", "Assets/Art/Kenney/PlatformerExtendedEnemies/Enemy sprites/snail.png", new Vector3(-6.3f, -2.12f, 0f), 1.4f, 1.7f);
+            CreateEnemy(worldRoot.transform, "MouseEnemy_A", "Assets/Art/Kenney/PlatformerExtendedEnemies/Enemy sprites/mouse.png", new Vector3(-0.8f, -2.12f, 0f), 1.5f, 2.0f);
+            CreateEnemy(worldRoot.transform, "BatEnemy_A", "Assets/Art/Kenney/PlatformerExtendedEnemies/Enemy sprites/bat_fly.png", new Vector3(7.1f, 2.2f, 0f), 1.6f, 2.2f);
+            CreateEnemy(worldRoot.transform, "BeeEnemy_A", "Assets/Art/Kenney/PlatformerExtendedEnemies/Enemy sprites/bee_fly.png", new Vector3(12.0f, 2.95f, 0f), 1.7f, 2.5f);
+            CreateEnemy(worldRoot.transform, "FlyEnemy_A", "Assets/Art/Kenney/PlatformerExtendedEnemies/Enemy sprites/fly_fly.png", new Vector3(17.0f, 3.75f, 0f), 1.5f, 2.7f);
 
-            CreateSpikes(worldRoot.transform, new Vector3(-7.15f, -2.44f, 0f));
-            CreateSpikes(worldRoot.transform, new Vector3(2.1f, -2.44f, 0f));
-            CreateSpikes(worldRoot.transform, new Vector3(6.25f, -2.44f, 0f));
-            CreateGoal(worldRoot.transform, new Vector3(12.35f, 3.2f, 0f));
-            CreateFallDeathZone(worldRoot.transform, -4.15f, 30f);
-            CreateBoundaries(worldRoot.transform, new Vector2(-13.8f, 13.8f), new Vector2(-4.55f, 4.75f));
-            CreateCameraFollow(cameraTransform, player.transform, new Vector2(-4.3f, 0f), new Vector2(4.3f, 0.3f));
+            CreateSpikes(worldRoot.transform, new Vector3(-9.3f, -2.44f, 0f));
+            CreateSpikes(worldRoot.transform, new Vector3(-2.1f, -2.44f, 0f));
+            CreateSpikes(worldRoot.transform, new Vector3(6.0f, -2.44f, 0f));
+            CreateSpikes(worldRoot.transform, new Vector3(13.9f, -2.44f, 0f));
+            CreateGoal(worldRoot.transform, new Vector3(18.65f, 4.05f, 0f));
+            CreateFallDeathZone(worldRoot.transform, -4.15f, 42f);
+            CreateBoundaries(worldRoot.transform, new Vector2(-17.2f, 20.0f), new Vector2(-4.55f, 5.15f));
+            CreateCameraFollow(cameraTransform, player.transform, new Vector2(-7.2f, 0.15f), new Vector2(11.8f, 1.45f));
         }
 
         private static void CreateLevelThreeWorld(Transform cameraTransform)
@@ -647,12 +654,12 @@ namespace TreasureTower.Editor
             var castleSprite = LoadSprite("Assets/Art/Kenney/BackgroundElements/PNG/castle_grey.png");
             var towerSprite = LoadSprite("Assets/Art/Kenney/BackgroundElements/PNG/tower_grey.png");
 
-            CreateDecorSprite("CloudBandLeft", cloudsSprite, new Vector3(-10.8f, 3.35f, 0f), new Vector3(1.15f, 1.08f, 1f), new Color(0.98f, 0.98f, 1f, 0.62f), -6);
-            CreateDecorSprite("CloudBandCenter", cloudsSprite, new Vector3(1.5f, 3.05f, 0f), new Vector3(1.3f, 1.08f, 1f), new Color(0.98f, 0.98f, 1f, 0.54f), -6);
-            CreateDecorSprite("CloudBandRight", cloudsSprite, new Vector3(12.0f, 3.3f, 0f), new Vector3(1.12f, 1.06f, 1f), new Color(0.98f, 0.98f, 1f, 0.58f), -6);
-            CreateDecorSprite("Hills", hillsSprite, new Vector3(1.8f, -1.55f, 0f), new Vector3(3.15f, 2.0f, 1f), new Color(0.63f, 0.67f, 0.83f, 0.52f), -5);
-            CreateDecorSprite("TowerLeft", towerSprite, new Vector3(-11.5f, -0.45f, 0f), new Vector3(1.2f, 1.2f, 1f), new Color(0.94f, 0.95f, 1f, 0.44f), -4);
-            CreateDecorSprite("CastleRight", castleSprite, new Vector3(12.8f, -0.35f, 0f), new Vector3(1.6f, 1.6f, 1f), new Color(0.94f, 0.95f, 1f, 0.42f), -4);
+            CreateDecorSprite("CloudBandLeft", cloudsSprite, new Vector3(-14.3f, 3.85f, 0f), new Vector3(1.45f, 1.15f, 1f), new Color(0.98f, 0.98f, 1f, 0.64f), -6);
+            CreateDecorSprite("CloudBandCenter", cloudsSprite, new Vector3(0.7f, 3.65f, 0f), new Vector3(1.62f, 1.14f, 1f), new Color(0.98f, 0.98f, 1f, 0.58f), -6);
+            CreateDecorSprite("CloudBandRight", cloudsSprite, new Vector3(16.1f, 3.85f, 0f), new Vector3(1.46f, 1.12f, 1f), new Color(0.98f, 0.98f, 1f, 0.61f), -6);
+            CreateDecorSprite("Hills", hillsSprite, new Vector3(2.3f, -1.55f, 0f), new Vector3(4.2f, 2.05f, 1f), new Color(0.63f, 0.67f, 0.83f, 0.52f), -5);
+            CreateDecorSprite("TowerLeft", towerSprite, new Vector3(-15.2f, -0.55f, 0f), new Vector3(1.2f, 1.2f, 1f), new Color(0.94f, 0.95f, 1f, 0.44f), -4);
+            CreateDecorSprite("CastleRight", castleSprite, new Vector3(18.0f, -0.4f, 0f), new Vector3(1.7f, 1.7f, 1f), new Color(0.94f, 0.95f, 1f, 0.42f), -4);
         }
 
         private static void CreateLevelThreeBackground()
