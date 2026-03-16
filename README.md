@@ -46,7 +46,12 @@ If you only want to run the game, use the Windows build:
 
 - `Builds/Windows/TreasureTower.exe`
 
-Make sure the `.exe` stays together with the generated `TreasureTower_Data` folder and the other files inside `Builds/Windows`.
+To run the game:
+
+1. Open the folder `Builds/Windows`
+2. Double-click `TreasureTower.exe`
+
+Make sure the `.exe` stays together with the `TreasureTower_Data` folder and the other files inside `Builds/Windows`.
 
 ### Play In Unity
 
