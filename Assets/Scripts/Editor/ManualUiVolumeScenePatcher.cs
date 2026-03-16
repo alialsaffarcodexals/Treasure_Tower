@@ -10,10 +10,13 @@ namespace TreasureTower.Editor
 {
     public static class ManualUiVolumeScenePatcher
     {
+        private const string MainMenuScenePath = "Assets/Scenes/Menus/MainMenu.unity";
+        private const string PauseMenuSourceScenePath = "Assets/Scenes/Levels/TreasureTower_Level05.unity";
+
         [MenuItem("Tools/Treasure Tower/Make UI Volume Controls Manual")]
         public static void PatchScenes()
         {
-            PatchMainMenu("Assets/Scenes/Menus/MainMenu.unity");
+            PatchMainMenu(MainMenuScenePath);
 
             foreach (var scenePath in Directory.GetFiles("Assets/Scenes/Levels", "*.unity"))
             {
@@ -23,9 +26,71 @@ namespace TreasureTower.Editor
             AssetDatabase.SaveAssets();
         }
 
+        [MenuItem("Tools/Treasure Tower/Apply Level 5 Pause Menu To All Levels")]
+        public static void ApplyLevelFivePauseMenuToAllLevels()
+        {
+            var sourceScene = EditorSceneManager.OpenScene(PauseMenuSourceScenePath, OpenSceneMode.Single);
+            var sourcePausePanel = FindGameObjectInScene(sourceScene, "PausePanel");
+            var sourceCanvas = FindComponentInScene<Canvas>(sourceScene, "Canvas");
+            if (sourcePausePanel == null || sourceCanvas == null)
+            {
+                throw new UnityException("Could not find source pause menu objects in Level 5.");
+            }
+
+            foreach (var targetPath in Directory.GetFiles("Assets/Scenes/Levels", "*.unity"))
+            {
+                var normalizedPath = targetPath.Replace('\\', '/');
+                if (normalizedPath == PauseMenuSourceScenePath)
+                {
+                    EditorSceneManager.SaveScene(sourceScene);
+                    continue;
+                }
+
+                var targetScene = EditorSceneManager.OpenScene(normalizedPath, OpenSceneMode.Additive);
+                var targetCanvas = FindComponentInScene<Canvas>(targetScene, "Canvas");
+                var targetHud = FindFirstComponentInScene<GameplayHudController>(targetScene);
+                if (targetCanvas == null || targetHud == null)
+                {
+                    EditorSceneManager.CloseScene(targetScene, true);
+                    continue;
+                }
+
+                var existingPausePanel = FindGameObjectInScene(targetScene, "PausePanel");
+                var siblingIndex = existingPausePanel != null ? existingPausePanel.transform.GetSiblingIndex() : 0;
+                if (existingPausePanel != null)
+                {
+                    Object.DestroyImmediate(existingPausePanel);
+                }
+
+                var clonedPausePanel = Object.Instantiate(sourcePausePanel, targetCanvas.transform);
+                clonedPausePanel.name = "PausePanel";
+
+                clonedPausePanel.transform.SetSiblingIndex(siblingIndex);
+
+                var serializedHud = new SerializedObject(targetHud);
+                serializedHud.FindProperty("pausePanel").objectReferenceValue = clonedPausePanel;
+                serializedHud.FindProperty("pauseMusicSlider").objectReferenceValue = FindSliderInChildren(clonedPausePanel.transform, "PauseMusicSlider");
+                serializedHud.FindProperty("pauseSfxSlider").objectReferenceValue = FindSliderInChildren(clonedPausePanel.transform, "PauseSfxSlider");
+                serializedHud.FindProperty("pauseUiSfxSlider").objectReferenceValue = FindSliderInChildren(clonedPausePanel.transform, "PauseUiSfxSlider");
+                serializedHud.ApplyModifiedPropertiesWithoutUndo();
+
+                EditorSceneManager.MarkSceneDirty(targetScene);
+                EditorSceneManager.SaveScene(targetScene);
+                EditorSceneManager.CloseScene(targetScene, true);
+            }
+
+            AssetDatabase.SaveAssets();
+        }
+
         public static void PatchScenesBatchMode()
         {
             PatchScenes();
+            EditorApplication.Exit(0);
+        }
+
+        public static void ApplyLevelFivePauseMenuToAllLevelsBatchMode()
+        {
+            ApplyLevelFivePauseMenuToAllLevels();
             EditorApplication.Exit(0);
         }
 
@@ -81,6 +146,65 @@ namespace TreasureTower.Editor
             }
 
             EditorSceneManager.SaveScene(scene);
+        }
+
+        private static T FindComponentInScene<T>(Scene scene, string objectName) where T : Component
+        {
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                foreach (var component in root.GetComponentsInChildren<T>(true))
+                {
+                    if (component.gameObject.name == objectName)
+                    {
+                        return component;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static GameObject FindGameObjectInScene(Scene scene, string objectName)
+        {
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                foreach (var transform in root.GetComponentsInChildren<Transform>(true))
+                {
+                    if (transform.gameObject.name == objectName)
+                    {
+                        return transform.gameObject;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static T FindFirstComponentInScene<T>(Scene scene) where T : Component
+        {
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                var component = root.GetComponentInChildren<T>(true);
+                if (component != null)
+                {
+                    return component;
+                }
+            }
+
+            return null;
+        }
+
+        private static Slider FindSliderInChildren(Transform root, string objectName)
+        {
+            foreach (var slider in root.GetComponentsInChildren<Slider>(true))
+            {
+                if (slider.gameObject.name == objectName)
+                {
+                    return slider;
+                }
+            }
+
+            return null;
         }
 
         private static Slider DuplicateSlider(Slider source, string name, Vector2 offset)
