@@ -16,16 +16,9 @@ namespace TreasureTower.UI
         [SerializeField] private Slider sfxSlider;
         [SerializeField] private Slider uiSfxSlider;
 
-        private bool buttonSoundsHooked;
-
-        private void Awake()
-        {
-            HookButtonSounds();
-        }
-
         private void OnEnable()
         {
-            ShowHome();
+            ShowHomeImmediate();
             RefreshLeaderboard();
             RefreshAudioSettings();
 
@@ -46,34 +39,20 @@ namespace TreasureTower.UI
 
         public void StartGame()
         {
+            UiClickSfx.Play();
             GameManager.Instance?.StartNewGame();
         }
 
         public void ShowHome()
         {
-            if (homePanel != null)
-            {
-                homePanel.SetActive(true);
-            }
-
-            if (storyPanel != null)
-            {
-                storyPanel.SetActive(false);
-            }
-
-            if (leaderboardPanel != null)
-            {
-                leaderboardPanel.SetActive(false);
-            }
-
-            if (settingsPanel != null)
-            {
-                settingsPanel.SetActive(false);
-            }
+            UiClickSfx.Play();
+            ShowHomeImmediate();
         }
 
         public void ShowStory()
         {
+            UiClickSfx.Play();
+
             if (homePanel != null)
             {
                 homePanel.SetActive(false);
@@ -97,6 +76,8 @@ namespace TreasureTower.UI
 
         public void ShowLeaderboard()
         {
+            UiClickSfx.Play();
+
             if (homePanel != null)
             {
                 homePanel.SetActive(false);
@@ -122,6 +103,8 @@ namespace TreasureTower.UI
 
         public void ShowSettings()
         {
+            UiClickSfx.Play();
+
             if (homePanel != null)
             {
                 homePanel.SetActive(false);
@@ -162,31 +145,36 @@ namespace TreasureTower.UI
 
         public void QuitGame()
         {
+            UiClickSfx.Play();
             Application.Quit();
-        }
-
-        private void HookButtonSounds()
-        {
-            if (buttonSoundsHooked)
-            {
-                return;
-            }
-
-            var buttons = GetComponentsInChildren<Button>(true);
-            foreach (var button in buttons)
-            {
-                button.onClick.AddListener(() =>
-                {
-                    UiClickSfx.Play();
-                });
-            }
-
-            buttonSoundsHooked = true;
         }
 
         private void OnUiSfxVolumeChanged(float value)
         {
             RefreshAudioSettings();
+        }
+
+        private void ShowHomeImmediate()
+        {
+            if (homePanel != null)
+            {
+                homePanel.SetActive(true);
+            }
+
+            if (storyPanel != null)
+            {
+                storyPanel.SetActive(false);
+            }
+
+            if (leaderboardPanel != null)
+            {
+                leaderboardPanel.SetActive(false);
+            }
+
+            if (settingsPanel != null)
+            {
+                settingsPanel.SetActive(false);
+            }
         }
 
         private void RefreshLeaderboard()

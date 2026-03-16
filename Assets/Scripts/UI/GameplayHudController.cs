@@ -27,13 +27,6 @@ namespace TreasureTower.UI
         [SerializeField] private Text victorySummaryText;
         [SerializeField] private Text victoryLeaderboardText;
 
-        private bool buttonSoundsHooked;
-
-        private void Awake()
-        {
-            HookButtonSounds();
-        }
-
         private void OnEnable()
         {
             if (GameManager.Instance == null)
@@ -84,21 +77,25 @@ namespace TreasureTower.UI
 
         public void ResumeGame()
         {
+            UiClickSfx.Play();
             GameManager.Instance?.ResumeGame();
         }
 
         public void RestartLevel()
         {
+            UiClickSfx.Play();
             GameManager.Instance?.RestartLevel();
         }
 
         public void RetryAfterGameOver()
         {
+            UiClickSfx.Play();
             GameManager.Instance?.RetryAfterGameOver();
         }
 
         public void ReturnToMenu()
         {
+            UiClickSfx.Play();
             GameManager.Instance?.ReturnToMainMenu();
         }
 
@@ -209,25 +206,6 @@ namespace TreasureTower.UI
             {
                 victoryLeaderboardText.text = GameManager.Instance.GetLeaderboardText();
             }
-        }
-
-        private void HookButtonSounds()
-        {
-            if (buttonSoundsHooked)
-            {
-                return;
-            }
-
-            var buttons = GetComponentsInChildren<Button>(true);
-            foreach (var button in buttons)
-            {
-                button.onClick.AddListener(() =>
-                {
-                    UiClickSfx.Play();
-                });
-            }
-
-            buttonSoundsHooked = true;
         }
 
         private void OnMusicVolumeChanged(float value)

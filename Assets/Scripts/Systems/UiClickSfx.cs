@@ -45,6 +45,7 @@ namespace TreasureTower.Systems
             audioSource.playOnAwake = false;
             audioSource.loop = false;
             audioSource.spatialBlend = 0f;
+            audioSource.ignoreListenerPause = true;
             audioSource.volume = 1f;
         }
     }

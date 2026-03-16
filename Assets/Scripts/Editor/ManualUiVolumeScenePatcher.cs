@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -147,24 +148,49 @@ namespace TreasureTower.Editor
             }
 
             var serializedObject = new SerializedObject(controller);
+            var musicSliderProp = serializedObject.FindProperty("pauseMusicSlider");
             var sfxSliderProp = serializedObject.FindProperty("pauseSfxSlider");
             var uiSfxSliderProp = serializedObject.FindProperty("pauseUiSfxSlider");
+            var musicSlider = musicSliderProp.objectReferenceValue as Slider;
             var sfxSlider = sfxSliderProp.objectReferenceValue as Slider;
             var uiSfxSlider = uiSfxSliderProp.objectReferenceValue as Slider;
+
+            if (musicSlider == null)
+            {
+                musicSlider = FindComponentInScene<Slider>(scene, "PauseMusicSlider");
+                musicSliderProp.objectReferenceValue = musicSlider;
+            }
+
+            if (sfxSlider == null)
+            {
+                sfxSlider = FindComponentInScene<Slider>(scene, "PauseSfxSlider");
+                sfxSliderProp.objectReferenceValue = sfxSlider;
+            }
 
             if (sfxSlider != null && uiSfxSlider == null)
             {
                 uiSfxSlider = DuplicateSlider(sfxSlider, "PauseUiSfxSlider", new Vector2(0f, -78f));
                 DuplicateLabel(FindSiblingTextByName(sfxSlider.transform.parent, "PauseSfxLabel"), "PauseUiSfxLabel", "Menu / UI", new Vector2(0f, -78f));
                 uiSfxSliderProp.objectReferenceValue = uiSfxSlider;
-                serializedObject.ApplyModifiedPropertiesWithoutUndo();
                 EditorSceneManager.MarkSceneDirty(scene);
             }
+
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+
+            FixSliderBinding(musicSlider, controller.SetMusicVolume);
+            FixSliderBinding(sfxSlider, controller.SetSfxVolume);
 
             if (uiSfxSlider != null)
             {
                 FixSliderBinding(uiSfxSlider, controller.SetUiSfxVolume);
             }
+
+            FixButtonBinding(FindComponentInScene<Button>(scene, "ResumeButton"), controller.ResumeGame);
+            FixButtonBinding(FindComponentInScene<Button>(scene, "PauseMenuButton"), controller.ReturnToMenu);
+            FixButtonBinding(FindComponentInScene<Button>(scene, "RestartHudButton"), controller.RestartLevel);
+            FixButtonBinding(FindComponentInScene<Button>(scene, "RetryButton"), controller.RetryAfterGameOver);
+            FixButtonBinding(FindComponentInScene<Button>(scene, "VictoryRetryButton"), controller.RestartLevel);
+            FixButtonBinding(FindComponentInScene<Button>(scene, "VictoryMenuButton"), controller.ReturnToMenu);
         }
 
         private static void FixSliderBinding(Slider slider, UnityEngine.Events.UnityAction<float> callback)
@@ -181,6 +207,22 @@ namespace TreasureTower.Editor
 
             UnityEventTools.AddPersistentListener(slider.onValueChanged, callback);
             EditorUtility.SetDirty(slider);
+        }
+
+        private static void FixButtonBinding(Button button, UnityAction callback)
+        {
+            if (button == null)
+            {
+                return;
+            }
+
+            while (button.onClick.GetPersistentEventCount() > 0)
+            {
+                UnityEventTools.RemovePersistentListener(button.onClick, 0);
+            }
+
+            UnityEventTools.AddPersistentListener(button.onClick, callback);
+            EditorUtility.SetDirty(button);
         }
 
         private static T FindComponentInScene<T>(Scene scene, string objectName) where T : Component
