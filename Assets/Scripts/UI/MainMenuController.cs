@@ -16,6 +16,11 @@ namespace TreasureTower.UI
         [SerializeField] private Slider sfxSlider;
         [SerializeField] private Slider uiSfxSlider;
 
+        private void Awake()
+        {
+            ShowHomeImmediate();
+        }
+
         private void OnEnable()
         {
             ShowHomeImmediate();
@@ -27,6 +32,12 @@ namespace TreasureTower.UI
                 AudioSettingsManager.Instance.UiSfxVolumeChanged -= OnUiSfxVolumeChanged;
                 AudioSettingsManager.Instance.UiSfxVolumeChanged += OnUiSfxVolumeChanged;
             }
+        }
+
+        private void Start()
+        {
+            ShowHomeImmediate();
+            RefreshAudioSettings();
         }
 
         private void OnDisable()

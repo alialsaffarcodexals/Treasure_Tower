@@ -38,6 +38,10 @@ namespace TreasureTower.Systems
             audioSource = GetComponent<AudioSource>();
             audioSource.loop = true;
             audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f;
+            audioSource.dopplerLevel = 0f;
+            audioSource.priority = 32;
+            audioSource.ignoreListenerPause = true;
             ApplyVolume();
 
             if (AudioSettingsManager.Instance != null)
@@ -57,13 +61,21 @@ namespace TreasureTower.Systems
                 return;
             }
 
+            if (clip.loadState == AudioDataLoadState.Unloaded)
+            {
+                clip.LoadAudioData();
+            }
+
             if (audioSource.clip != clip)
             {
+                audioSource.Stop();
                 audioSource.clip = clip;
+                audioSource.time = 0f;
                 audioSource.Play();
             }
             else if (!audioSource.isPlaying)
             {
+                audioSource.time = 0f;
                 audioSource.Play();
             }
 
