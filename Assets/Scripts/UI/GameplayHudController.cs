@@ -28,11 +28,12 @@ namespace TreasureTower.UI
         [SerializeField] private Text victoryLeaderboardText;
 
         private bool buttonSoundsHooked;
+        private bool uiSliderHooked;
 
         private void Awake()
         {
-            EnsurePauseUiSfxControls();
             HookButtonSounds();
+            HookUiSlider();
         }
 
         private void OnEnable()
@@ -42,7 +43,7 @@ namespace TreasureTower.UI
                 return;
             }
 
-            EnsurePauseUiSfxControls();
+            HookUiSlider();
             GameManager.Instance.ScoreChanged += OnScoreChanged;
             GameManager.Instance.StateChanged += OnStateChanged;
             GameManager.Instance.TransitionMessageChanged += OnTransitionMessageChanged;
@@ -229,88 +230,15 @@ namespace TreasureTower.UI
             buttonSoundsHooked = true;
         }
 
-        private void EnsurePauseUiSfxControls()
+        private void HookUiSlider()
         {
-            if (pauseUiSfxSlider != null || pauseSfxSlider == null)
+            if (uiSliderHooked || pauseUiSfxSlider == null)
             {
                 return;
             }
 
-            var sliderObject = Instantiate(pauseSfxSlider.gameObject, pauseSfxSlider.transform.parent);
-            sliderObject.name = "PauseUiSfxSlider";
-            var sliderRect = sliderObject.GetComponent<RectTransform>();
-            var sourceRect = pauseSfxSlider.GetComponent<RectTransform>();
-            if (sliderRect != null && sourceRect != null)
-            {
-                sliderRect.anchorMin = sourceRect.anchorMin;
-                sliderRect.anchorMax = sourceRect.anchorMax;
-                sliderRect.pivot = sourceRect.pivot;
-                sliderRect.sizeDelta = sourceRect.sizeDelta;
-                sliderRect.anchoredPosition = sourceRect.anchoredPosition + new Vector2(0f, -78f);
-                sliderRect.localScale = sourceRect.localScale;
-            }
-
-            pauseUiSfxSlider = sliderObject.GetComponent<Slider>();
-            pauseUiSfxSlider.onValueChanged.RemoveAllListeners();
             pauseUiSfxSlider.onValueChanged.AddListener(SetUiSfxVolume);
-
-            var templateLabel = FindClosestLabel(pauseSfxSlider);
-            if (templateLabel != null)
-            {
-                var labelObject = Instantiate(templateLabel.gameObject, templateLabel.transform.parent);
-                labelObject.name = "PauseUiSfxLabel";
-                var labelRect = labelObject.GetComponent<RectTransform>();
-                var templateRect = templateLabel.GetComponent<RectTransform>();
-                if (labelRect != null && templateRect != null)
-                {
-                    labelRect.anchorMin = templateRect.anchorMin;
-                    labelRect.anchorMax = templateRect.anchorMax;
-                    labelRect.pivot = templateRect.pivot;
-                    labelRect.sizeDelta = templateRect.sizeDelta;
-                    labelRect.anchoredPosition = templateRect.anchoredPosition + new Vector2(0f, -78f);
-                    labelRect.localScale = templateRect.localScale;
-                }
-
-                var labelText = labelObject.GetComponent<Text>();
-                if (labelText != null)
-                {
-                    labelText.text = "Menu / UI";
-                }
-            }
-        }
-
-        private Text FindClosestLabel(Slider slider)
-        {
-            var sliderRect = slider.GetComponent<RectTransform>();
-            if (sliderRect == null || slider.transform.parent == null)
-            {
-                return null;
-            }
-
-            Text closestLabel = null;
-            var bestScore = float.MaxValue;
-            foreach (var label in slider.transform.parent.GetComponentsInChildren<Text>(true))
-            {
-                var labelRect = label.GetComponent<RectTransform>();
-                if (labelRect == null)
-                {
-                    continue;
-                }
-
-                if (labelRect.anchoredPosition.x >= sliderRect.anchoredPosition.x)
-                {
-                    continue;
-                }
-
-                var score = Mathf.Abs(labelRect.anchoredPosition.y - sliderRect.anchoredPosition.y);
-                if (score < bestScore)
-                {
-                    bestScore = score;
-                    closestLabel = label;
-                }
-            }
-
-            return closestLabel;
+            uiSliderHooked = true;
         }
 
         private void OnMusicVolumeChanged(float value)
