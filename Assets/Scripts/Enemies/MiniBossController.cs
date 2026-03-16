@@ -146,6 +146,11 @@ namespace TreasureTower.Enemies
             {
                 var xOffset = UnityEngine.Random.Range(-2.4f, 2.4f);
                 var minion = Instantiate(minionTemplate, transform.position + new Vector3(xOffset, -0.32f, 0f), Quaternion.identity);
+                if (minion.TryGetComponent<SimplePatrolEnemy>(out var patrolEnemy))
+                {
+                    patrolEnemy.EnablePlayerChase(player != null ? player.transform : null);
+                }
+
                 minion.SetActive(true);
             }
         }

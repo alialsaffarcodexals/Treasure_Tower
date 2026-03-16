@@ -25,6 +25,8 @@ namespace TreasureTower.Enemies
         private bool defeated;
         private float normalizedTravel;
         private bool movingRight = true;
+        private bool chasePlayer;
+        private Transform chaseTarget;
 
         private void Awake()
         {
@@ -42,6 +44,26 @@ namespace TreasureTower.Enemies
         {
             if (defeated)
             {
+                return;
+            }
+
+            if (chasePlayer && chaseTarget != null)
+            {
+                var direction = Mathf.Sign(chaseTarget.position.x - transform.position.x);
+                if (Mathf.Abs(chaseTarget.position.x - transform.position.x) < 0.05f)
+                {
+                    direction = 0f;
+                }
+
+                movingRight = direction >= 0f;
+                var chasePosition = new Vector2(transform.position.x + (direction * speed * Time.fixedDeltaTime), startPosition.y);
+                body.MovePosition(chasePosition);
+
+                if (spriteRenderer != null && direction != 0f)
+                {
+                    spriteRenderer.flipX = movingRight;
+                }
+
                 return;
             }
 
@@ -135,6 +157,16 @@ namespace TreasureTower.Enemies
             AudioOneShot.Play(defeatClip, transform.position, 0.85f);
             SpawnCoinDrop();
             Destroy(gameObject);
+        }
+
+        public void EnablePlayerChase(Transform target)
+        {
+            chasePlayer = target != null;
+            chaseTarget = target;
+            if (chasePlayer)
+            {
+                startPosition = transform.position;
+            }
         }
 
         public void TakeProjectileHit()
