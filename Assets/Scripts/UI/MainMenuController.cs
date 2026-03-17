@@ -20,6 +20,9 @@ namespace TreasureTower.UI
         [SerializeField] private Button easyDifficultyButton;
         [SerializeField] private Button hardDifficultyButton;
 
+        private static readonly Color SelectedDifficultyColor = new(1f, 0.78f, 0.08f, 1f);
+        private static readonly Color UnselectedDifficultyColor = new(1f, 1f, 1f, 1f);
+
         private bool runtimeButtonsHooked;
 
         private void Awake()
@@ -321,13 +324,31 @@ namespace TreasureTower.UI
 
             if (easyDifficultyButton != null)
             {
-                easyDifficultyButton.interactable = mode != DifficultyMode.Easy;
+                ApplyDifficultyButtonState(easyDifficultyButton, mode == DifficultyMode.Easy);
             }
 
             if (hardDifficultyButton != null)
             {
-                hardDifficultyButton.interactable = mode != DifficultyMode.Hard;
+                ApplyDifficultyButtonState(hardDifficultyButton, mode == DifficultyMode.Hard);
             }
+        }
+
+        private static void ApplyDifficultyButtonState(Button button, bool selected)
+        {
+            button.interactable = true;
+
+            if (button.targetGraphic is Graphic graphic)
+            {
+                graphic.color = selected ? SelectedDifficultyColor : UnselectedDifficultyColor;
+            }
+
+            var colors = button.colors;
+            colors.normalColor = selected ? SelectedDifficultyColor : UnselectedDifficultyColor;
+            colors.highlightedColor = selected ? SelectedDifficultyColor : UnselectedDifficultyColor;
+            colors.selectedColor = selected ? SelectedDifficultyColor : UnselectedDifficultyColor;
+            colors.pressedColor = selected ? new Color(0.94f, 0.72f, 0.04f, 1f) : new Color(0.92f, 0.92f, 0.92f, 1f);
+            colors.disabledColor = selected ? SelectedDifficultyColor : UnselectedDifficultyColor;
+            button.colors = colors;
         }
     }
 }

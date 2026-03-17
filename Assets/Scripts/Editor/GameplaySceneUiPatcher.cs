@@ -25,12 +25,15 @@ namespace TreasureTower.Editor
         [MenuItem("Tools/Treasure Tower/Patch Gameplay HUD And Tiles")]
         public static void PatchScenes()
         {
+            var sourceLayout = ReadLevelLabelLayout("Assets/Scenes/Levels/TreasureTower_Level01.unity");
+
             foreach (var scenePath in GameplayScenePaths)
             {
                 var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
                 var changed = false;
 
                 changed |= EnsureLevelLabel();
+                changed |= ApplyLevelLabelLayout(sourceLayout);
 
                 if (scenePath.EndsWith("TreasureTower_Level04.unity"))
                 {
@@ -46,6 +49,27 @@ namespace TreasureTower.Editor
 
             AssetDatabase.SaveAssets();
             Debug.Log("Patched gameplay HUD level labels and Level 4 tile hierarchy.");
+        }
+
+        private static LevelLabelLayout ReadLevelLabelLayout(string scenePath)
+        {
+            var sourceScene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            EnsureLevelLabel();
+            var levelText = FindTransformByName("LevelText") as RectTransform;
+            if (levelText == null)
+            {
+                return LevelLabelLayout.Default;
+            }
+
+            return new LevelLabelLayout
+            {
+                AnchorMin = levelText.anchorMin,
+                AnchorMax = levelText.anchorMax,
+                AnchoredPosition = levelText.anchoredPosition,
+                SizeDelta = levelText.sizeDelta,
+                Pivot = levelText.pivot,
+                SiblingIndex = levelText.GetSiblingIndex()
+            };
         }
 
         private static bool EnsureLevelLabel()
@@ -97,6 +121,30 @@ namespace TreasureTower.Editor
             levelTextProperty.objectReferenceValue = levelText;
             serializedHud.ApplyModifiedProperties();
             return true;
+        }
+
+        private static bool ApplyLevelLabelLayout(LevelLabelLayout layout)
+        {
+            var levelText = FindTransformByName("LevelText") as RectTransform;
+            if (levelText == null)
+            {
+                return false;
+            }
+
+            var changed = false;
+            changed |= SetIfDifferent(levelText.anchorMin, layout.AnchorMin, value => levelText.anchorMin = value);
+            changed |= SetIfDifferent(levelText.anchorMax, layout.AnchorMax, value => levelText.anchorMax = value);
+            changed |= SetIfDifferent(levelText.pivot, layout.Pivot, value => levelText.pivot = value);
+            changed |= SetIfDifferent(levelText.anchoredPosition, layout.AnchoredPosition, value => levelText.anchoredPosition = value);
+            changed |= SetIfDifferent(levelText.sizeDelta, layout.SizeDelta, value => levelText.sizeDelta = value);
+
+            if (levelText.GetSiblingIndex() != layout.SiblingIndex)
+            {
+                levelText.SetSiblingIndex(layout.SiblingIndex);
+                changed = true;
+            }
+
+            return changed;
         }
 
         private static bool NormalizeLevel04Tiles(Scene scene)
@@ -217,6 +265,37 @@ namespace TreasureTower.Editor
             }
 
             return null;
+        }
+
+        private static bool SetIfDifferent(Vector2 currentValue, Vector2 newValue, System.Action<Vector2> setter)
+        {
+            if (currentValue == newValue)
+            {
+                return false;
+            }
+
+            setter(newValue);
+            return true;
+        }
+
+        private struct LevelLabelLayout
+        {
+            public Vector2 AnchorMin;
+            public Vector2 AnchorMax;
+            public Vector2 AnchoredPosition;
+            public Vector2 SizeDelta;
+            public Vector2 Pivot;
+            public int SiblingIndex;
+
+            public static LevelLabelLayout Default => new()
+            {
+                AnchorMin = new Vector2(0.5f, 0.5f),
+                AnchorMax = new Vector2(0.5f, 0.5f),
+                AnchoredPosition = new Vector2(-365f, 0f),
+                SizeDelta = new Vector2(130f, 30f),
+                Pivot = new Vector2(0.5f, 0.5f),
+                SiblingIndex = 0
+            };
         }
     }
 }

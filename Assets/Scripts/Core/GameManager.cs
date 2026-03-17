@@ -26,6 +26,7 @@ namespace TreasureTower.Core
         public int coins;
         public int deaths;
         public float timeSeconds;
+        public string difficulty;
     }
 
     [Serializable]
@@ -70,6 +71,10 @@ namespace TreasureTower.Core
         private bool resetLivesOnSceneLoad = true;
         private bool miniBossRunActive;
         private int storedLevelLivesBeforeMiniBoss = DifficultySettings.LivesPerStage;
+        private int levelEntryCoins;
+        private int levelEntryGems;
+        private int miniBossEntryCoins;
+        private int miniBossEntryGems;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void EnsureInstance()
@@ -132,6 +137,7 @@ namespace TreasureTower.Core
         public void RestartLevel()
         {
             Time.timeScale = 1f;
+            RestoreSceneEntryProgress(currentLevelPath);
             LoadScene(currentLevelPath);
         }
 
@@ -145,6 +151,7 @@ namespace TreasureTower.Core
                 {
                     resetLivesOnSceneLoad = false;
                     retryScenePath = currentLevelPath;
+                    RestoreMiniBossEntryProgress();
                     LoadScene(currentLevelPath);
                     return;
                 }
@@ -159,6 +166,7 @@ namespace TreasureTower.Core
                     LivesRemaining = remainingLevelLives;
                     resetLivesOnSceneLoad = false;
                     retryScenePath = miniBossReturnLevelPath;
+                    RestoreMainLevelEntryProgress();
                     var returnLevelPath = miniBossReturnLevelPath;
                     miniBossReturnLevelPath = string.Empty;
                     LoadScene(returnLevelPath);
@@ -171,6 +179,7 @@ namespace TreasureTower.Core
 
             if (HasLivesRemaining)
             {
+                RestoreSceneEntryProgress(retryScenePath);
                 LoadScene(retryScenePath);
                 return;
             }
@@ -252,6 +261,8 @@ namespace TreasureTower.Core
             miniBossReturnLevelPath = retryLevelPath;
             miniBossSkipTargetPath = skipLevelPath;
             retryScenePath = miniBossScenePath;
+            miniBossEntryCoins = Coins;
+            miniBossEntryGems = Gems;
             LivesRemaining = MaxLivesPerStage;
             resetLivesOnSceneLoad = false;
             Time.timeScale = 1f;
@@ -340,7 +351,7 @@ namespace TreasureTower.Core
             VictoryTitle = "Congratulations";
             VictoryMessage = "You finished all 5 levels of Treasure Tower.";
             VictoryStats =
-                $"Attempt #{AttemptNumber}\nCoins: {Coins}\nDeaths: {Deaths}\nTime: {FormatTime(ElapsedTime)}\n\nYou conquered the final door.";
+                $"Run #{AttemptNumber}\nMode: {DifficultySettings.CurrentMode}\nCoins: {Coins}\nDeaths: {Deaths}\nTime: {FormatTime(ElapsedTime)}\n\nYou conquered the final door.";
             Time.timeScale = 0f;
             SetState(GameFlowState.Victory);
         }
@@ -364,8 +375,10 @@ namespace TreasureTower.Core
 
                 visibleEntryCount++;
                 builder.Append(i + 1)
-                    .Append(". Attempt #")
+                    .Append(". Run #")
                     .Append(record.attemptNumber)
+                    .Append("  ")
+                    .Append(string.IsNullOrWhiteSpace(record.difficulty) ? "Hard" : record.difficulty)
                     .Append("  Coins ")
                     .Append(record.coins)
                     .Append("  Deaths ")
@@ -447,6 +460,14 @@ namespace TreasureTower.Core
                     miniBossReturnLevelPath = string.Empty;
                     storedLevelLivesBeforeMiniBoss = MaxLivesPerStage;
                 }
+
+                levelEntryCoins = Coins;
+                levelEntryGems = Gems;
+            }
+            else if (IsMiniBossScene(scene.path))
+            {
+                miniBossEntryCoins = Coins;
+                miniBossEntryGems = Gems;
             }
 
             if (resetLivesOnSceneLoad)
@@ -475,6 +496,10 @@ namespace TreasureTower.Core
             miniBossReturnLevelPath = string.Empty;
             miniBossRunActive = false;
             storedLevelLivesBeforeMiniBoss = MaxLivesPerStage;
+            levelEntryCoins = 0;
+            levelEntryGems = 0;
+            miniBossEntryCoins = 0;
+            miniBossEntryGems = 0;
             GameOverMessage = "You lost a life.";
             VictoryTitle = "Congratulations";
             VictoryMessage = "You finished the game.";
@@ -490,7 +515,8 @@ namespace TreasureTower.Core
                 attemptNumber = AttemptNumber,
                 coins = Coins,
                 deaths = Deaths,
-                timeSeconds = ElapsedTime
+                timeSeconds = ElapsedTime,
+                difficulty = DifficultySettings.CurrentMode.ToString()
             };
 
             leaderboard.Insert(0, record);
@@ -551,6 +577,33 @@ namespace TreasureTower.Core
         {
             return scenePath == SceneIds.Level01MiniBoss ||
                    scenePath == SceneIds.Level03MiniBoss;
+        }
+
+        private void RestoreSceneEntryProgress(string scenePath)
+        {
+            if (IsMiniBossScene(scenePath))
+            {
+                RestoreMiniBossEntryProgress();
+                return;
+            }
+
+            RestoreMainLevelEntryProgress();
+        }
+
+        private void RestoreMainLevelEntryProgress()
+        {
+            Coins = levelEntryCoins;
+            Gems = levelEntryGems;
+            ScoreChanged?.Invoke(Coins, Gems);
+            RunStatsChanged?.Invoke();
+        }
+
+        private void RestoreMiniBossEntryProgress()
+        {
+            Coins = miniBossEntryCoins;
+            Gems = miniBossEntryGems;
+            ScoreChanged?.Invoke(Coins, Gems);
+            RunStatsChanged?.Invoke();
         }
 
         private void SetState(GameFlowState newState)
