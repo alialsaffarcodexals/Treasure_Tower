@@ -1,0 +1,11 @@
+Treasure Tower Submission Links
+
+PC Build Download:
+https://github.com/alialsaffarcodexals/Treasure_Tower/raw/main/Builds/TreasureTower_Windows.zip
+
+GitHub Repository:
+https://github.com/alialsaffarcodexals/Treasure_Tower
+
+Version Control Notes:
+- The repository includes a Unity .gitignore file.
+- The repository includes a .gitattributes file.
