@@ -26,6 +26,7 @@ namespace TreasureTower.Editor
         public static void PatchScenes()
         {
             var sourceLayout = ReadLevelLabelLayout("Assets/Scenes/Levels/TreasureTower_Level01.unity");
+            var topBarLayout = ReadTopBarLayout("Assets/Scenes/Levels/TreasureTower_Level04.unity");
 
             foreach (var scenePath in GameplayScenePaths)
             {
@@ -34,6 +35,7 @@ namespace TreasureTower.Editor
 
                 changed |= EnsureLevelLabel();
                 changed |= ApplyLevelLabelLayout(sourceLayout);
+                changed |= ApplyTopBarLayout(topBarLayout);
 
                 if (scenePath.EndsWith("TreasureTower_Level04.unity"))
                 {
@@ -49,6 +51,25 @@ namespace TreasureTower.Editor
 
             AssetDatabase.SaveAssets();
             Debug.Log("Patched gameplay HUD level labels and Level 4 tile hierarchy.");
+        }
+
+        private static TopBarLayout ReadTopBarLayout(string scenePath)
+        {
+            EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            var topBar = FindTransformByName("TopBar") as RectTransform;
+            if (topBar == null)
+            {
+                return TopBarLayout.Default;
+            }
+
+            return new TopBarLayout
+            {
+                AnchorMin = topBar.anchorMin,
+                AnchorMax = topBar.anchorMax,
+                AnchoredPosition = topBar.anchoredPosition,
+                SizeDelta = topBar.sizeDelta,
+                Pivot = topBar.pivot
+            };
         }
 
         private static LevelLabelLayout ReadLevelLabelLayout(string scenePath)
@@ -144,6 +165,23 @@ namespace TreasureTower.Editor
                 changed = true;
             }
 
+            return changed;
+        }
+
+        private static bool ApplyTopBarLayout(TopBarLayout layout)
+        {
+            var topBar = FindTransformByName("TopBar") as RectTransform;
+            if (topBar == null)
+            {
+                return false;
+            }
+
+            var changed = false;
+            changed |= SetIfDifferent(topBar.anchorMin, layout.AnchorMin, value => topBar.anchorMin = value);
+            changed |= SetIfDifferent(topBar.anchorMax, layout.AnchorMax, value => topBar.anchorMax = value);
+            changed |= SetIfDifferent(topBar.pivot, layout.Pivot, value => topBar.pivot = value);
+            changed |= SetIfDifferent(topBar.anchoredPosition, layout.AnchoredPosition, value => topBar.anchoredPosition = value);
+            changed |= SetIfDifferent(topBar.sizeDelta, layout.SizeDelta, value => topBar.sizeDelta = value);
             return changed;
         }
 
@@ -295,6 +333,24 @@ namespace TreasureTower.Editor
                 SizeDelta = new Vector2(130f, 30f),
                 Pivot = new Vector2(0.5f, 0.5f),
                 SiblingIndex = 0
+            };
+        }
+
+        private struct TopBarLayout
+        {
+            public Vector2 AnchorMin;
+            public Vector2 AnchorMax;
+            public Vector2 AnchoredPosition;
+            public Vector2 SizeDelta;
+            public Vector2 Pivot;
+
+            public static TopBarLayout Default => new()
+            {
+                AnchorMin = new Vector2(0.5f, 1f),
+                AnchorMax = new Vector2(0.5f, 1f),
+                AnchoredPosition = new Vector2(0f, -52f),
+                SizeDelta = new Vector2(1000f, 64f),
+                Pivot = new Vector2(0.5f, 1f)
             };
         }
     }

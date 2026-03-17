@@ -115,7 +115,7 @@ namespace TreasureTower.Enemies
 
         private bool CanBeStompedBy(PlayerController2D player, Collision2D collision)
         {
-            if (player.Velocity.y > Mathf.Max(stompVelocityThreshold, 1f))
+            if (player.Velocity.y > stompVelocityThreshold)
             {
                 return false;
             }
@@ -128,34 +128,31 @@ namespace TreasureTower.Enemies
 
             var playerBottom = playerCollider.bounds.min.y;
             var playerCenter = playerCollider.bounds.center.y;
+            var playerCenterX = playerCollider.bounds.center.x;
             var enemyCenter = enemyCollider.bounds.center.y;
             var enemyTop = enemyCollider.bounds.max.y;
-            var playerClearlyAboveEnemy = playerBottom >= enemyCenter - stompClearance && playerCenter >= enemyCenter;
-            if (playerClearlyAboveEnemy)
+            var enemyMinX = enemyCollider.bounds.min.x;
+            var enemyMaxX = enemyCollider.bounds.max.x;
+            var horizontalAlignment = playerCenterX >= enemyMinX - stompClearance && playerCenterX <= enemyMaxX + stompClearance;
+            if (!horizontalAlignment)
             {
-                return true;
+                return false;
             }
 
-            var playerAboveEnemy = playerBottom >= enemyTop - stompClearance;
-            if (playerAboveEnemy)
-            {
-                return true;
-            }
+            var playerFeetNearTop = playerBottom >= enemyTop - stompClearance && playerBottom <= enemyTop + 0.35f;
+            var playerAboveEnemy = playerCenter >= enemyCenter;
+            var contactFromAbove = false;
 
             foreach (var contact in collision.contacts)
             {
                 if (contact.normal.y <= -0.25f)
                 {
-                    return true;
-                }
-
-                if (contact.point.y >= enemyTop - stompClearance)
-                {
-                    return true;
+                    contactFromAbove = true;
+                    break;
                 }
             }
 
-            return player.transform.position.y >= enemyCenter;
+            return playerAboveEnemy && playerFeetNearTop && contactFromAbove;
         }
 
         private void Defeat(PlayerController2D player)

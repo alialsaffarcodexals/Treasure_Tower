@@ -32,8 +32,13 @@ namespace TreasureTower.Systems
             if (inputModule == null)
             {
                 inputModule = eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();
-                inputModule.AssignDefaultActions();
             }
+
+            // Always reassign the default UI actions at runtime so stale serialized
+            // action references in scene files cannot break clicks in standalone builds.
+            inputModule.AssignDefaultActions();
+            inputModule.enabled = false;
+            inputModule.enabled = true;
 
             var legacyModule = eventSystem.GetComponent<StandaloneInputModule>();
             if (legacyModule != null)
