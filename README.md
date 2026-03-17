@@ -44,22 +44,11 @@ git clone https://github.com/alialsaffarcodexals/Treasure_Tower.git
 If you only want to play the game, use the included Windows build:
 
 - `Builds/Windows/TreasureTower.exe`
-- downloadable zip: `https://github.com/alialsaffarcodexals/Treasure_Tower/raw/main/Builds/TreasureTower_Windows.zip`
 
 To run it:
 
 1. Open the folder `Builds/Windows`
 2. Double-click `TreasureTower.exe`
-
-If you want to share the game with someone else, send them this build zip link:
-
-- [Download Treasure Tower for Windows](https://github.com/alialsaffarcodexals/Treasure_Tower/raw/main/Builds/TreasureTower_Windows.zip)
-
-After downloading:
-
-1. Extract `TreasureTower_Windows.zip`
-2. Open the extracted folder
-3. Double-click `TreasureTower.exe`
 
 Important:
 
