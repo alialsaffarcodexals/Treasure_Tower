@@ -11,8 +11,8 @@ namespace TreasureTower.Enemies
     {
         [SerializeField] private float speed = 2f;
         [SerializeField] private float patrolDistance = 2.5f;
-        [SerializeField] private float stompVelocityThreshold = -0.1f;
-        [SerializeField] private float stompClearance = 0.05f;
+        [SerializeField] private float stompVelocityThreshold = 2f;
+        [SerializeField] private float stompClearance = 0.25f;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private AudioClip defeatClip;
         [SerializeField] private AudioClip playerHitClip;
@@ -126,33 +126,15 @@ namespace TreasureTower.Enemies
                 return false;
             }
 
-            var playerBottom = playerCollider.bounds.min.y;
             var playerCenter = playerCollider.bounds.center.y;
-            var playerCenterX = playerCollider.bounds.center.x;
             var enemyCenter = enemyCollider.bounds.center.y;
+            var playerBottom = playerCollider.bounds.min.y;
+            var enemyBottom = enemyCollider.bounds.min.y;
             var enemyTop = enemyCollider.bounds.max.y;
-            var enemyMinX = enemyCollider.bounds.min.x;
-            var enemyMaxX = enemyCollider.bounds.max.x;
-            var horizontalAlignment = playerCenterX >= enemyMinX - stompClearance && playerCenterX <= enemyMaxX + stompClearance;
-            if (!horizontalAlignment)
-            {
-                return false;
-            }
 
-            var playerFeetNearTop = playerBottom >= enemyTop - stompClearance && playerBottom <= enemyTop + 0.35f;
-            var playerAboveEnemy = playerCenter >= enemyCenter;
-            var contactFromAbove = false;
-
-            foreach (var contact in collision.contacts)
-            {
-                if (contact.normal.y <= -0.25f)
-                {
-                    contactFromAbove = true;
-                    break;
-                }
-            }
-
-            return playerAboveEnemy && playerFeetNearTop && contactFromAbove;
+            var playerCameFromAbove = playerCenter >= enemyCenter - stompClearance;
+            var playerReachedEnemyHeight = playerBottom >= enemyBottom - stompClearance && playerBottom <= enemyTop + 0.6f;
+            return playerCameFromAbove && playerReachedEnemyHeight;
         }
 
         private void Defeat(PlayerController2D player)
