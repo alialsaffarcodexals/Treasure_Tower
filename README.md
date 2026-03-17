@@ -44,7 +44,7 @@ git clone https://github.com/alialsaffarcodexals/Treasure_Tower.git
 If you only want to play the game, use the included Windows build:
 
 - `Builds/Windows/TreasureTower.exe`
-- Download from GitHub Release: `https://github.com/alialsaffarcodexals/Treasure_Tower/releases/tag/v1.0.0`
+- Download from GitHub Release: `https://github.com/alialsaffarcodexals/Treasure_Tower/releases/tag/v1.0.1`
 
 To run it:
 
@@ -56,6 +56,12 @@ Important:
 - Keep `TreasureTower.exe` together with the `TreasureTower_Data` folder and the other files inside `Builds/Windows`
 - The included build is intended to reflect the latest committed project version
 - You can also download the packaged Windows build directly from the GitHub release page above
+
+## Latest Release
+
+- `v1.0.1` has been released
+- fixes menu button interaction in the standalone Windows build
+- makes jump hits on normal enemies more forgiving and reliable
 
 ## Controls
 
