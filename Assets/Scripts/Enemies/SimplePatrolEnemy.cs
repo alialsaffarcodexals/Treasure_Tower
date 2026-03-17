@@ -115,7 +115,7 @@ namespace TreasureTower.Enemies
 
         private bool CanBeStompedBy(PlayerController2D player, Collision2D collision)
         {
-            if (player.Velocity.y > stompVelocityThreshold)
+            if (player.Velocity.y > Mathf.Max(stompVelocityThreshold, 1f))
             {
                 return false;
             }
@@ -127,7 +127,15 @@ namespace TreasureTower.Enemies
             }
 
             var playerBottom = playerCollider.bounds.min.y;
+            var playerCenter = playerCollider.bounds.center.y;
+            var enemyCenter = enemyCollider.bounds.center.y;
             var enemyTop = enemyCollider.bounds.max.y;
+            var playerClearlyAboveEnemy = playerBottom >= enemyCenter - stompClearance && playerCenter >= enemyCenter;
+            if (playerClearlyAboveEnemy)
+            {
+                return true;
+            }
+
             var playerAboveEnemy = playerBottom >= enemyTop - stompClearance;
             if (playerAboveEnemy)
             {
@@ -147,7 +155,7 @@ namespace TreasureTower.Enemies
                 }
             }
 
-            return player.transform.position.y > transform.position.y + stompClearance;
+            return player.transform.position.y >= enemyCenter;
         }
 
         private void Defeat(PlayerController2D player)

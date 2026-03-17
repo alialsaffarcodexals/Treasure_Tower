@@ -2,6 +2,7 @@ using TreasureTower.Core;
 using TreasureTower.Systems;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace TreasureTower.UI
 {
@@ -10,6 +11,7 @@ namespace TreasureTower.UI
         [SerializeField] private Text coinsText;
         [SerializeField] private Text gemsText;
         [SerializeField] private Text timerText;
+        [SerializeField] private Text levelText;
         [SerializeField] private Text livesText;
         [SerializeField] private Text deathsText;
         [SerializeField] private GameObject transitionPanel;
@@ -34,6 +36,7 @@ namespace TreasureTower.UI
                 return;
             }
 
+            EnsureLevelText();
             GameManager.Instance.ScoreChanged += OnScoreChanged;
             GameManager.Instance.StateChanged += OnStateChanged;
             GameManager.Instance.TransitionMessageChanged += OnTransitionMessageChanged;
@@ -172,6 +175,12 @@ namespace TreasureTower.UI
                 timerText.text = $"Time {GameManager.FormatTime(GameManager.Instance.ElapsedTime)}";
             }
 
+            EnsureLevelText();
+            if (levelText != null)
+            {
+                levelText.text = GetCurrentLevelLabel();
+            }
+
             if (livesText != null)
             {
                 livesText.text = $"Lives {GameManager.Instance.LivesRemaining}/{GameManager.Instance.MaxLivesPerStage}";
@@ -244,6 +253,67 @@ namespace TreasureTower.UI
             {
                 pauseUiSfxSlider.SetValueWithoutNotify(AudioSettingsManager.Instance.UiSfxVolume);
             }
+        }
+
+        private static string GetCurrentLevelLabel()
+        {
+            var sceneName = SceneManager.GetActiveScene().name;
+            if (sceneName.Contains("Level01_MiniBoss"))
+            {
+                return "Level 1 Boss";
+            }
+
+            if (sceneName.Contains("Level03_MiniBoss"))
+            {
+                return "Level 3 Boss";
+            }
+
+            if (sceneName.Contains("Level01"))
+            {
+                return "Level 1";
+            }
+
+            if (sceneName.Contains("Level02"))
+            {
+                return "Level 2";
+            }
+
+            if (sceneName.Contains("Level03"))
+            {
+                return "Level 3";
+            }
+
+            if (sceneName.Contains("Level04"))
+            {
+                return "Level 4";
+            }
+
+            if (sceneName.Contains("Level05"))
+            {
+                return "Level 5";
+            }
+
+            return "Level";
+        }
+
+        private void EnsureLevelText()
+        {
+            if (levelText != null || coinsText == null)
+            {
+                return;
+            }
+
+            var templateObject = coinsText.gameObject;
+            var levelObject = Instantiate(templateObject, templateObject.transform.parent);
+            levelObject.name = "LevelText";
+            levelText = levelObject.GetComponent<Text>();
+            levelText.raycastTarget = false;
+            levelText.alignment = TextAnchor.MiddleCenter;
+
+            var rect = levelObject.GetComponent<RectTransform>();
+            rect.anchoredPosition = new Vector2(-365f, 0f);
+            rect.sizeDelta = new Vector2(130f, 30f);
+            rect.SetSiblingIndex(0);
         }
     }
 }

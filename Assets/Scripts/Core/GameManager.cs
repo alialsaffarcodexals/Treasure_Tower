@@ -353,9 +353,16 @@ namespace TreasureTower.Core
             }
 
             var builder = new StringBuilder();
+            var visibleEntryCount = 0;
             for (var i = 0; i < leaderboard.Count; i++)
             {
                 var record = leaderboard[i];
+                if (record == null)
+                {
+                    continue;
+                }
+
+                visibleEntryCount++;
                 builder.Append(i + 1)
                     .Append(". Attempt #")
                     .Append(record.attemptNumber)
@@ -366,13 +373,18 @@ namespace TreasureTower.Core
                     .Append("  Time ")
                     .Append(FormatTime(record.timeSeconds));
 
-                if (i < leaderboard.Count - 1)
+                if (visibleEntryCount < leaderboard.Count)
                 {
                     builder.Append('\n');
                 }
             }
 
-            return builder.ToString();
+            if (builder.Length == 0)
+            {
+                return "No completed attempts yet.\nFinish the game to create the first record.";
+            }
+
+            return builder.ToString().TrimEnd();
         }
 
         public string GetControlSummary()
