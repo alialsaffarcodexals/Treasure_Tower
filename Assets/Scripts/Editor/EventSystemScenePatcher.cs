@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 
@@ -10,9 +11,17 @@ namespace TreasureTower.Editor
 {
     public static class EventSystemScenePatcher
     {
-        [MenuItem("Tools/Treasure Tower/Patch Event Systems For Standalone")]
+        private const string InputActionsAssetPath = "Assets/InputSystem_Actions.inputactions";
+
+        [MenuItem("Tools/Treasure Tower/Patch Event Systems For Input System UI")]
         public static void PatchAllScenes()
         {
+            var inputActionsAsset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputActionsAssetPath);
+            if (inputActionsAsset == null)
+            {
+                throw new FileNotFoundException($"Unable to load Input Actions asset at '{InputActionsAssetPath}'.");
+            }
+
             var scenePaths = AssetDatabase.FindAssets("t:Scene", new[] { "Assets/Scenes" });
             foreach (var sceneGuid in scenePaths)
             {
@@ -25,14 +34,17 @@ namespace TreasureTower.Editor
                 }
 
                 var inputSystemModule = eventSystem.GetComponent<InputSystemUIInputModule>();
-                if (inputSystemModule != null)
+                if (inputSystemModule == null)
                 {
-                    Object.DestroyImmediate(inputSystemModule, true);
+                    inputSystemModule = eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();
                 }
 
-                if (eventSystem.GetComponent<StandaloneInputModule>() == null)
+                inputSystemModule.actionsAsset = inputActionsAsset;
+
+                var standaloneModule = eventSystem.GetComponent<StandaloneInputModule>();
+                if (standaloneModule != null)
                 {
-                    eventSystem.gameObject.AddComponent<StandaloneInputModule>();
+                    Object.DestroyImmediate(standaloneModule, true);
                 }
 
                 EditorSceneManager.MarkSceneDirty(scene);
@@ -40,7 +52,7 @@ namespace TreasureTower.Editor
             }
 
             AssetDatabase.SaveAssets();
-            Debug.Log("Patched EventSystem components in all scenes.");
+            Debug.Log("Patched EventSystem components in all scenes for Input System UI.");
         }
     }
 }
