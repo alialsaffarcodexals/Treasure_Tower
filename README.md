@@ -44,6 +44,7 @@ git clone https://github.com/alialsaffarcodexals/Treasure_Tower.git
 If you only want to play the game, use the included Windows build:
 
 - `Builds/Windows/TreasureTower.exe`
+- GitHub Release: `https://github.com/alialsaffarcodexals/Treasure_Tower/releases/tag/v1.0.0`
 
 To run it:
 
@@ -54,6 +55,7 @@ Important:
 
 - Keep `TreasureTower.exe` together with the `TreasureTower_Data` folder and the other files inside `Builds/Windows`
 - The included build is intended to reflect the latest committed project version
+- The packaged Windows download is also available from the GitHub release page
 
 ## Controls
 

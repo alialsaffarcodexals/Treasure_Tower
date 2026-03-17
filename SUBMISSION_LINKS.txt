@@ -1,7 +1,7 @@
 Treasure Tower Submission Links
 
 PC Build Download:
-https://github.com/alialsaffarcodexals/Treasure_Tower/raw/main/Builds/TreasureTower_Windows.zip
+https://github.com/alialsaffarcodexals/Treasure_Tower/releases/tag/v1.0.0
 
 GitHub Repository:
 https://github.com/alialsaffarcodexals/Treasure_Tower
