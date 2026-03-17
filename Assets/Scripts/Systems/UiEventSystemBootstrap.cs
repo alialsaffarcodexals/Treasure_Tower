@@ -45,6 +45,11 @@ namespace TreasureTower.Systems
             {
                 Object.Destroy(legacyModule);
             }
+
+            if (!Application.isEditor && eventSystem.GetComponent<UiButtonClickFallback>() == null)
+            {
+                eventSystem.gameObject.AddComponent<UiButtonClickFallback>();
+            }
         }
     }
 }
